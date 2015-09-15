@@ -11,12 +11,12 @@ plot_foodweb <- function(community){
 	net=graph.adjacency(AJ,mode="directed",weighted="width",diag=F)
 
 	V(net)$color = colors
-	V(net)$size = 10*node_size^0.2
-	set.seed(1)
+	V(net)$size = 15*node_size^0.1
+	set.seed(2)
 
 	par(bg="gray",mar=rep(0,4))
 
-		plot.igraph(net,vertex.label=rep("",dim(link_mat)[1]),edge.arrow.size = E(net)$width^0.5/4,vertex.frame.color=0,vertex.color=colors,edge.color="black",edge.width=E(net)$width^0.5*3)
+		plot.igraph(net,vertex.label=rep("",dim(link_mat)[1]),edge.arrow.size = E(net)$width^0.5/4,vertex.frame.color=0,vertex.color=colors,edge.color="black",edge.width=E(net)$width^0.2*4)
 	legend("bottomright",c("basal","intermediate","top"),pch=16,col=rainbow(3))
 
 }

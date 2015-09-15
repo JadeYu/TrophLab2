@@ -1,9 +1,9 @@
 source("step_optimization.R")
 
-nsp= 50
-tdistr="uniform"
-Dr=0.5
-gamma=0.01
+nsp = 50
+tdistr="geometric"
+Dr = 0.9
+gamma = 0.001 ##from 0.001 to 0.02
 
 
 FW = one_food_web(nsp,tdistr,Dr,gamma)
@@ -11,11 +11,12 @@ plot_foodweb(FW)
 chains <- get_chains(FW)
 
 ##Write the back and forth behavior in the analysis!!
-num_basal(FW) + num_predators(FW)
+#num_basal(FW) + num_predators(FW)
 num_basal(FW)
 num_top(FW)
+log(length(chains))
 connectance(FW)
-Chain_length(chains,loop=F)
+Chain_length(chains,loop=T)
 loops(chains)
 
 sum(FW$sp_mat$theta*FW$sp_mat$APN)

@@ -75,10 +75,12 @@ Chain_length <- function(chains,loop){
 	if(!loop){
 		chains = chains[unlist(lapply(chains,Loop_length))==0]
 	}
-	mean(unlist(lapply(chains,length)))
+	CL = unlist(lapply(chains,length))
+	list(mCL= mean(CL),sCL= sd(CL))
 }
 
 Loop_length <- function(chain){
+	Loop_sp <- c()
 	if(length(chain)==length(unique(chain))){
 		LL = 0
 	}else{
@@ -86,14 +88,22 @@ Loop_length <- function(chain){
 		sp <- sort(sps)[table(chain)>1]
 		
 		indice <- (1:length(chain))[chain==sp]
+		Loop_sp <- chain[indice[1]:indice[2]]
 		LL = indice[2]-indice[1]+1
 	}
-	LL
+	list(LL,Loop_sp)
 }
 
 loops <- function(chains){
-	LL_seq <- unlist(lapply(chains,Loop_length))
+	lsp <- c()
+	LL_seq <- numeric(length(chains))
+	for(i in 1:length(chains)){
+		Loop <- Loop_length(chains[[i]])
+		LL_seq[i] <- Loop[[1]]
+		lsp <- c(lsp,Loop[[2]])
+	}
 	N_loops <- sum(LL_seq>0)
 	MLL <- mean(LL_seq[LL_seq>0])
-	list(N_loops = N_loops,MLL = MLL)
+	#list(N_loops = N_loops,nlsp=length(unique(lsp)),MLL = MLL)
+	length(unique(lsp))
 }

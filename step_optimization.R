@@ -18,32 +18,32 @@ one_food_web <- function(nsp,tdistr,Dr,gamma){##small disperse meaning linear, d
 
 try_one_food_web <- function(nsp,tdistr,Dr,gamma){
 	community <- generate.pool(nsp,tdistr,Dr,gamma) 
-	scenario <-FWA_switch_cost(community,tau_u)
+	scenario <-FWA_switch_cost(community)
 ##omni specifies whether the species can consume the fundamental resource or not
 	scenario
 }
 
 ##functions################
-FWA_switch_cost <- function(community,tau_u,threshold=10^-3){
+FWA_switch_cost <- function(community,threshold=10^-2){
 	community0 <- community
 	equilibrium <- FALSE
 	step <- 0
 	while(!equilibrium&step<100){
-		community <- one_step(community,tau_u)
-		equilibrium <- judge_equi(community,community0)
+		community <- one_step(community)
+		equilibrium <- judge_equi(community,community0,threshold)
 		community0 <- community
 		step <- step +1
 		print(paste("S=",num_basal(community) + num_predators(community),"L=",num_links(community)))
 	}
-	community <- get_after_abundance(community,tau_u)
-	community <- flow_pattern(community,tau_u)
+	community <- get_after_abundance(community)
+	community <- flow_pattern(community)
 	community
 }
 
-one_step <- function(community,tau_u){
+one_step <- function(community){
 	indice <- community$sp_mat$index
 	for(index in indice){
-		predation <- select_prey(community,index,tau_u)
+		predation <- select_prey(community,index)
 		basal <- basal_SSN(index,community)
 		if(basal$SSN>=predation$SSN){
 			selection <- basal
@@ -62,44 +62,46 @@ basal_SSN <- function(index,community){
 	basals <- indice[is.basal(indice,community)]
 	species <- c(index,basals[basals!=index])
 	basal_mat <- community$sp_mat[species,]
-	SSN <- solve.analytical(basal_mat$theta,basal_mat$Dr,100,1)[1]
+	SSN <- try(solve.analytical(basal_mat$theta,basal_mat$Dr,100,1)[1])
+	if(class(SSN)=="try-error"){
+		print("basal problem")
+		print(community)
+	}
 	list(index=index,SSN=SSN,tau_c=1,added_prey=c())
 }
 
-select_prey <- function(community,index,tau_u){
+select_prey <- function(community,index){
 	sp_mat <- community$sp_mat
 	tau_c <- 1
 	increase <- SSN <- 0
 	added_prey <- c()
 	predators <- sp_mat$index[community$link_mat[index,]>0]
-	preys <- sp_mat$index[-c(index,predators)]
-	#preys <- community$sp_mat$index[-index]
-	#preys <- community$sp_mat$index[-index]
+	preys <- community$sp_mat$index[-c(index,predators)]
 	##Remove species that prey on it to avoid direct loops
 	SSNs <- numeric(length(preys))
 	if(length(preys)>0){
 		for(p in 1:length(preys)){
-			SSNs[p] <- try_prey(preys[p],community,index,tau_c*exp(-sp_mat$gamma[preys[p]]*(sp_mat$Dr[preys[p]])),tau_u)
+			SSNs[p] <- try_prey(preys[p],community,index,tau_c*exp(-sp_mat$gamma[preys[p]]*(sp_mat$Dr[preys[p]])))
 		}
 		preys <- preys[order(SSNs,decreasing=T)]##determine priority 
-	}
-	increase <- sum(unlist(lapply(c(added_prey,preys[1]),try_prey,tau_c=tau_c*exp(-sp_mat$gamma[preys[1]]*(sp_mat$Dr[preys[1]])),community=community,index=index,tau_u=tau_u))) - SSN
-	while(increase>0&&length(preys)>0){
-		added_prey <- c(added_prey,preys[1])
-		tau_c <- tau_c*exp(-sp_mat$gamma[preys[1]]*(sp_mat$Dr[preys[1]]))
-		preys <- preys[-1]##remove the best prey	
-		SSN <- SSN+increase
-		if(length(preys)>0){
-			increase <- sum(unlist(lapply(c(added_prey,preys[1]),try_prey,tau_c=tau_c*exp(-sp_mat$gamma[preys[1]]*(sp_mat$Dr[preys[1]])),community=community,index=index,tau_u=tau_u))) - SSN
+		increase <- sum(unlist(lapply(c(added_prey,preys[1]),try_prey,tau_c=tau_c*exp(-sp_mat$gamma[preys[1]]*(sp_mat$Dr[preys[1]])),community=community,index=index))) - SSN
+		while(increase>0&&length(preys)>0){
+			added_prey <- c(added_prey,preys[1])
+			tau_c <- tau_c*exp(-sp_mat$gamma[preys[1]]*(sp_mat$Dr[preys[1]]))
+			preys <- preys[-1]##remove the best prey	
+			SSN <- SSN+increase
+			if(length(preys)>0){
+				increase <- sum(unlist(lapply(c(added_prey,preys[1]),try_prey,tau_c=tau_c*exp(-sp_mat$gamma[preys[1]]*(sp_mat$Dr[preys[1]])),community=community,index=index))) - SSN
+			}
 		}
 	}
 	list(index=index,SSN=SSN,tau_c=tau_c,added_prey=added_prey)
 }
 
-try_prey <- function(prey,community,index,tau_c,tau_u){
+try_prey <- function(prey,community,index,tau_c){
 	sp_mat <- community$sp_mat
 	link_mat <- community$link_mat
-	predators <- sp_mat$index[1:dim(link_mat)[2]][link_mat[prey,]>0]
+	predators <- sp_mat$index[link_mat[prey,]>0]
 	predators <- predators[predators!=index]
 	if(length(predators)==0){##no other predators
 		SSN <- sp_mat$BPN[prey]*sp_mat$theta[prey]/2*tau_c*tau_u/sp_mat$theta[index]
@@ -107,23 +109,32 @@ try_prey <- function(prey,community,index,tau_c,tau_u){
 		theta_seq <- c(sp_mat$theta[index]/tau_c,(sp_mat$theta/sp_mat$tau_c)[predators])
 		Dr_seq <- sp_mat$Dr[c(index,predators)]
 		R_prey <- sp_mat$theta[prey]*sp_mat$BPN[prey]/2*tau_u
-		SSN <-solve.analytical(theta_seq,Dr_seq,R_prey,1)[1]
+		SSN <-try(solve.analytical(theta_seq,Dr_seq,R_prey,1)[1])
+		if(class(SSN)=="try-error"){
+			print("prey selection problem")
+			print(Dr_seq)
+			print(paste("prey=",prey))
+			print(link_mat[prey,])
+			#print(community)
+			print(num_basal(community))
+			print(num_top(community))
+		}
 	}
 	SSN
 }
 
-SSN_before_predation <- function(sp,community,tau_u){##calculate SSN before a species is preyed on
+SSN_before_predation <- function(sp,community){##calculate SSN before a species is preyed on
 	sp_mat= community$sp_mat
 	link_mat = community$link_mat
 	preys <- sp_mat$index[link_mat[,sp]>0]
 	SSN <- 0
 	if(length(preys)>0){
-		SSN <- sum(unlist(lapply(preys,try_prey,community=community,index=sp,tau_c=sp_mat$tau_c[sp],tau_u=tau_u)))
+		SSN <- sum(unlist(lapply(preys,try_prey,community=community,index=sp,tau_c=sp_mat$tau_c[sp])))
 	}
 	SSN
 }
 
-SSN_after_predation <- function(sp,community,tau_u){##half the prey population and add the uncaptured prey back to its steady state abundance
+SSN_after_predation <- function(sp,community){##half the prey population and add the uncaptured prey back to its steady state abundance
 	sp_mat = community$sp_mat
 	link_mat = community$link_mat
 	SSN <- sp_mat$BPN[sp]
@@ -132,15 +143,15 @@ SSN_after_predation <- function(sp,community,tau_u){##half the prey population a
 		SSN <- 0.5*SSN
 		for(i in 1:length(predators)){
 			tau_c <- sp_mat$tau_c[predators[i]]
-			SSN <- SSN+try_prey(sp,community,predators[i],tau_c,tau_u)*sp_mat$theta[predators[i]]/sp_mat$theta[sp]/tau_u*(1-tau_c)/tau_c##the uncaptured amount from a given predator
+			SSN <- SSN+try_prey(sp,community,predators[i],tau_c)*sp_mat$theta[predators[i]]/sp_mat$theta[sp]/tau_u*(1-tau_c)/tau_c##the uncaptured amount from a given predator
 		}
 	}
 	SSN
 }
 
-get_after_abundance <- function(community,tau_u){
+get_after_abundance <- function(community){
 	for(sp in community$sp_mat$index){
-		community$sp_mat$APN[sp] <- SSN_after_predation(sp,community,tau_u)
+		community$sp_mat$APN[sp] <- SSN_after_predation(sp,community)
 	}
 	community
 }
@@ -166,12 +177,12 @@ update <- function(community,selection){
 }
 
 
-flow_pattern <- function(community,tau_u){
+flow_pattern <- function(community){
 	sp_mat <- community$sp_mat
 	link_mat <- community$link_mat
 	for(sp in sp_mat$index[1:dim(link_mat)[2]]){
 		preys <- sp_mat$index[link_mat[,sp]>0]
-		link_mat[preys,sp] <- unlist(lapply(preys,try_prey,community=community,index=sp,tau_c=sp_mat$tau_c[sp],tau_u=tau_u))*sp_mat$theta[sp]/tau_u
+		link_mat[preys,sp] <- unlist(lapply(preys,try_prey,community=community,index=sp,tau_c=sp_mat$tau_c[sp]))*sp_mat$theta[sp]/tau_u
 	}
 	list(sp_mat=sp_mat,link_mat=link_mat)
 }
@@ -227,7 +238,7 @@ update_abundance <- function(community){
 	BPN0 <- BPN <- community$sp_mat$BPN
 	while(!match){
 		for(sp in non_basals){
-			BPN[sp] <- SSN_before_predation(sp,community,tau_u)
+			BPN[sp] <- SSN_before_predation(sp,community)
 		}
 		match <- sd(BPN-BPN0)/mean(BPN0)<10^-3
 		BPN0 <- BPN
