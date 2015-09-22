@@ -39,6 +39,8 @@
 \raggedright
 \large
 \setlength{\parindent}{15pt}
+Add in the fundamental resource!!!
+
 Assuming all species are connected to one another in a fully connected food web, the steady state abundances of all species can be analytically expressed, from which the amount of resource transferred between any two species, i.e. the width of any trophic link, can be numerically determined without any simulation procedure. Specifically when all species share the same relative individual distinguishability $D_r$, each link can be analytically solved as a simple function of the product of resource requirements ($\theta$) of the two species connected by the link. Promises and problems are discussed at the end.
 
 \section{Expressing the steady state abundances in a fully connected web}
@@ -62,12 +64,12 @@ Given this, the amount of resource transferred from species $i$ to species $j$ (
 \end{equation}
 Where $C_i$ is a constant for species $i$ determined by its resource content (given $R_i$, $C_i$ can be solved by $\sum R_{ij} = R_i$).
 
-When each of the species can prey on all species (including itself) as well as be preyed on by all species, its steady state resource content can be expressed in two ways, 1) as the sum of resources obtained from all species and 2) as the sum of resources given to all species. Of course the trophic efficiency has to be considered in these expressions.  These two relationships put into equations is as follows:
+When each of the species can prey on all species (including itself) as well as be preyed on by all species, its steady state resource content can be expressed in two ways, 1) as the sum of in flows, or resources obtained from all species and 2) as the sum of out flows, or resources given by the species to all species. Of course the trophic efficiency has to be considered in these expressions.  These two relationships put into equations is as follows:
 
  \begin{equation}
  \begin{split}
- R_i = \tau_u \times \sum_j^{S_0} R_{ji} =  \tau_u \sum_j^{S_0} C_j^{\frac{1}{D_{r,i}-1}} {\theta_i}^{\frac{D_{r,i}}{D_{r,i}-1}}\hskip 1in \mbox{(flows in)}\\
- = \sum_j^{S_0} R_{ij} = \sum_j^{S_0} C_i^{\frac{1}{D_{r,j}-1}} {\theta_j}^{\frac{D_{r,j}}{D_{r,j}-1}}\hskip 1in \mbox{(flows out)}
+ R_i = \tau_u \times \sum_j^{S_0} R_{ji} =  \tau_u \sum_j^{S_0} C_j^{\frac{1}{D_{r,i}-1}} {\theta_i}^{\frac{D_{r,i}}{D_{r,i}-1}}\hskip 1in \mbox{(in flows)}\\
+ = \sum_j^{S_0} R_{ij} = \sum_j^{S_0} C_i^{\frac{1}{D_{r,j}-1}} {\theta_j}^{\frac{D_{r,j}}{D_{r,j}-1}}\hskip 1in \mbox{(out flows)}
 \end{split}
 \end{equation}
 $\tau_u$ is the trophic efficiency quantifying the proportion of flow-in resources transferred into biomass of the species. The prey distinguishability does not affect steady state abundance of the predator (for derivations see Write-up ).
@@ -78,7 +80,8 @@ Applying Eq. 4 to all species (make $i$ be any value from 1 to $S_0$), we get $S
 
  \begin{equation}
  \begin{split}
- \mbox{for all $i$ in 1 - $S_0$:} \hskip 1 cm \tau_u \sum_j^{S_0} C_j^{\frac{1}{D_{r,i}-1}} {\theta_i}^{\frac{D_{r,i}}{D_{r,i}-1}} = \sum_j^{S_0} C_i^{\frac{1}{D_{r,j}-1}} {\theta_j}^{\frac{D_{r,j}}{D_{r,j}-1}}
+ \mbox{(for all $i$ in 1 - $S_0$:)} \hskip 3 in \\
+ \tau_u \sum_j^{S_0} C_j^{\frac{1}{D_{r,i}-1}} {\theta_i}^{\frac{D_{r,i}}{D_{r,i}-1}} = \sum_j^{S_0} C_i^{\frac{1}{D_{r,j}-1}} {\theta_j}^{\frac{D_{r,j}}{D_{r,j}-1}}
 \end{split}
 \end{equation}
 

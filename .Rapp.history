@@ -1,187 +1,3 @@
-nsample <- 1000
-S <- sample_richness(surfaces[[1]],D=2)
-S
-D_seq <- 2^(1:6)
-analyses of the simulated surface#
-##Finish SAR!!#
-#
-plot_abund <- function(surface,Sp){#
-	xlim <- ylim <- sqrt(dim(surface)[1])#
-		plot(1~1,xlim=c(0,xlim),ylim=c(0,ylim),col=NA,xlab=paste("spatial distribution W-E (Sp",Sp,")",sep=""),ylab="N-S")#
-		indice <- 1:dim(surface)[1]#
-		y <- floor(indice/xlim)#
-		x <- indice%%xlim#
-		exist <- surface[,Sp]>0#
-		N_seq <- surface[,Sp][exist]#
-		points(y[exist]~x[exist],col=paste("gray",80-round(80/max(N_seq)*N_seq),sep=""),pch=16,cex=1)#
-}#
-#
-plot_sp <- function(surface){#
-	richness <- rowSums(surface>0)#
-}#
-#
-plot_SSAD <- function(surface, Sp){#
-	abundance <- surface[,Sp]#
-	hist(abundance,xlab=paste("SSAD (Sp",Sp,sep=""))#
-	Y <- fitdistr(abundance,"negative binomial")$estimate#
-	x_seq <- 0:max(abundance)#
-	nb_seq <- dnbinom(x_seq,Y[1],Y[1]/sum(Y))#
-	lines(x_seq,nb_seq,col=2)#
-	legend("topright",paste("NBD (k=",Y[1],")",sep=""))#
-}#
-#
-plot_SAR <- function(surface,D_seq,nsample){#
-	richness <- matrix(ncol=length(D_seq),nrow=nsample)#
-	for(i in 1:length(D_seq)){#
-		richness[,i] <- as.numeric(replicate(nsample,sample_richness(surface,D_seq[i])))#
-	}#
-	colnames(richness) <- D_seq#
-	A_seq <- D_seq^2#
-	plot(colSums(richness)/nsample~A_seq,xlab="area",ylab="richness")#
-	richness#
-}#
-#
-sample_richness <- function(surface,D){#
-	D <- floor(D)#
-	out <- TRUE#
-	while(out){#
-		rx <- ceiling(runif(1,1,sqrt(dim(surface)[1])/D))#
-		ry <- ceiling(runif(1,1,sqrt(dim(surface)[1])/D))#
-		rx_range <- 1:D + (rx-1)*D#
-		ry_range <- 1:D + (ry-1)*D#
-		out <- sum(range(rx_range)<0|range(rx_range)>sqrt(dim(surface)[1]))|sum(range(ry_range)<0|range(ry_range)>sqrt(dim(surface)[1]))#
-	}#
-	rx_seq <- rep(rx_range,each=D)#
-	ry_seq <- rep(ry_range,D)#
-	i_seq <- (rx_seq-1)*sqrt(dim(surface)[1])+ry_seq#
-	sample <- surface[i_seq,]#
-	richness <- sum(colSums(sample)>0)#
-	richness#
-}#
-#
-plot_envi <- function(envi_mat,envi){#
-	envi_mat <- envi_mat/(max(envi_mat)-min(envi_mat))#
-	envi_mat <- envi_mat-min(envi_mat)-0.5#
-	##rescale it to be on [0,1]#
-	ylim <- dim(envi_mat)[1]#
-	xlim <- dim(envi_mat)[2]#
-	plot(1~1,xlim=c(0,xlim),ylim=c(0,ylim),col=NA,xlab=paste("spatial distribution W-E (",envi,")",sep=""),ylab="N-S")#
-	y <- rep(1:ylim,each=xlim)#
-	x <- rep(1:xlim,ylim)#
-	points(y~x,col=paste("gray",round(as.numeric(envi_mat)+0.5)*100,sep=""),pch=16)#
-}
-plot_SAR(surfaces[[1]],D_seq,nsample)
-i=2
-plot_envi(envi_list[[i]],envis[i])
-x1=seq(0,1,length=50)
-x1
-x2=sqrt(1-x1^2)
-x2
--x1[37]/x2[37]
-x1[37]/x2[37]*x1[37]
-x3=seq(0.5,0.9,length=30)
-b=x1[37]/x2[37]*x1[37]
-a=-x1[37]/x2[37]
-plot(x2~x1,col=0)
-lines(x2~x1)
-plot(x2~x1,col=0,xlim=c(0,2),ylim=c(0,1.5))
-lines(x2~x1)
-plot(x2~x1,col=0,xlim=c(0,2),ylim=c(0,1.5),xlab="prey1",ylab="prey2")
-lines(x2~x1)
-abline(a,b)
-abline(b,a)
-a=-x2[37]/x1[37]
-b=a*x1[37]
-abline(b,a)
-abline(a,b)
-a
-b
-b=-b
-abline(a,b)
-abline(b,a)
-a
-b=x2[37]-x1[37]*a
-b
-abline(b,a)
-a=-x2[45]/x1[45]
-b=x2[45]-x1[45]*a
-abline(b,a)
-plot(x2~x1,col=0,xlim=c(0,2),ylim=c(0,1.5),xlab="prey1",ylab="prey2")#
-> lines(x2~x1)
-lines(x1,x2)
-abline(b,a)
-abline(a,b)
-a=-x2[45]/x1[45]
-b=x2[45]-x1[45]*a
-a
-b
-abline(b,a)
-x2[45]
-x1[45]
-a
-a=-x1[45]/x2[45]
-b=x2[45]-x1[45]*a
-abline(b,a)
-plot(x2~x1,col=0,xlim=c(0,2),ylim=c(0,1.5),xlab="prey1",ylab="prey2")
-lines(x1,x2)
-abline(b,a)
-plot(x2~x1,col=0,xlim=c(0,2),ylim=c(0,1.5),xlab="prey1",ylab="prey2")
-abline(b,a)
-plot(x2~x1,col=0,xlim=c(0,2),ylim=c(0,1.5),xlab="prey1",ylab="prey2")
-lines(x1,x2)
-abline(b,a,col=2)
-?text
-text(1,1.2,"max(R_predator)=N_prey1/theta_predator1+N_prey2/theta_predator2")
-text(1,1.2,"max(R_predator)=N_prey1/theta_predator1+N_prey2/theta_predator2",cex=0.5)
-plot(x2~x1,col=0,xlim=c(0,2),ylim=c(0,1.5),xlab="prey1",ylab="prey2")
-lines(x1,x2)
-abline(b,a,col=2)
-text(1.2,1.2,"max(R_predator)=N_prey1/theta_predator1+N_prey2/theta_predator2",cex=0.7)
-plot(x2~x1,col=0,xlim=c(0,2),ylim=c(0,1.5),xlab="prey1",ylab="prey2")
-lines(x1,x2)
-abline(b,a,col=2)
-text(1.2,1.2,"max(R_predator)=N_prey1/theta_pred1+N_prey2/theta_pred2",cex=0.7)
-plot(x2~x1,col=0,xlim=c(0,2),ylim=c(0,1.5),xlab="prey1",ylab="prey2")
-lines(x1,x2)
-abline(b,a,col=2)
-plot(x2~x1,col=0,xlim=c(0,2),ylim=c(0,1.5),xlab="g_prey1",ylab="g_prey2")
-lines(x1,x2)
-abline(b,a,col=2)
-k_seq <- seq(0.01,10,by=0.05)
-length(k_seq)
-library(MASS)
-?fitdistr
-k_fit <- c()
-for(k in k_seq){sample <- rnbinom(100,k,mu=10),sample=sample[sample>0],k_fit <- c(k_fit,fitdistr(sample,"negative binomial")$estimate[1])}
-for(k in k_seq){sample <- rnbinom(100,k,mu=10);sample=sample[sample>0],k_fit <- c(k_fit,fitdistr(sample,"negative binomial")$estimate[1])}
-for(k in k_seq){sample <- rnbinom(100,k,mu=10);sample=sample[sample>0];k_fit <- c(k_fit,fitdistr(sample,"negative binomial")$estimate[1])}
-k_fit
-plot(k_fit~k_seq,xlab="actual k(nsample=100,mu=10)",ylab="fitted k (to zero-removed samples)")
-plot(k_fit[1:100]~k_seq[1:100],xlab="actual k(nsample=100,mu=10)",ylab="fitted k (to zero-removed samples)")
-plot(k_fit[1:50]~k_seq[1:50],xlab="actual k(nsample=100,mu=10)",ylab="fitted k (to zero-removed samples)")
-for(k in k_seq){for(i in 1:30){kfit <- c();sample <- rnbinom(100,k,mu=10);sample=sample[sample>0];kfit <- c(kfit,fitdistr(sample,"negative binomial"$estimate[1])};k_fit <- c(k_fit,mean(kfit))}
-for(k in k_seq){#
-	for(i in 1:30){#
-		kfit <- c()#
-		sample <- rnbinom(100,k,mu=10)#
-		sample <- sample[sample>0]#
-		kfit <- c(kfit,fitdistr(sample,"negative binomial"$estimate[1])#
-	}#
-	k_fit <- c(k_fit,mean(kfit))#
-}
-k=1
-for(i in 1:30){#
-		kfit <- c()#
-		sample <- rnbinom(100,k,mu=10)#
-		sample <- sample[sample>0]#
-		kfit <- c(kfit,fitdistr(sample,"negative binomial"$estimate[1])#
-	}
-for(i in 1:30){#
-		kfit <- c()#
-		sample <- rnbinom(100,k,mu=10)#
-		sample <- sample[sample>0]#
-		kfit <- c(kfit,fitdistr(sample,"negative binomial"$estimate[1])
-}
 kfit <- c()#
 		sample <- rnbinom(100,k,mu=10)#
 		sample <- sample[sample>0]#
@@ -733,7 +549,6 @@ getwd()
 rgeom(0.5)
 rgeom(100.5)
 rgeom(10,0.5)
-rgeom(10,0.5)
 rgeom(10,0.1)
 rgeom(10,0.05)
 x=rgeom(10,0.05)
@@ -771,3 +586,249 @@ generate.pool
 source("Full_Web.R")
 FW <- FW_full(nsp,tdistr,Dr)
 FW
+getwd()
+library(nleqslv)
+?nleqslv
+Dr_seq <- c(0.5,0.5)#
+theta_seq <- c(1,2)#
+R0 <- 100#
+tau_u <- 0.1
+Ri2j <- function(C_i,Dr_j,theta_j){#
+	D <- 1/(Dr_j-1)#
+	(C_i*theta_j)^D * theta_j#
+}#
+#
+in_flows <- function(C_seq,Dr_i,theta_i,tau_u){#
+	flows <- numeric(length(C_seq))#
+	for(s in 1:length(C_seq)){#
+		flows[s] <- Ri2j(C_seq[s],Dr_i,theta_i)*tau_u#
+	}#
+	sum(flows)#
+}#
+#
+out_flows <- function(C_i,Dr_seq,theta_seq){#
+	flows <- numeric(length(Dr_seq))#
+	for(s in 1:length(Dr_seq)){#
+		flows[s] <- Ri2j(C_i,Dr_seq[s],theta_seq[s])#
+	}#
+	sum(flows)#
+}#
+#
+R_eqs <- function(C_seq,theta_seq,Dr_seq,R0,tau_u){#
+	EQS <- numeric(length(C_seq)){#
+		EQS[1] <- R0 - out_flows(C_seq[1],Dr_seq,theta_seq)#
+		for(i in 2:length(C_seq)){#
+			EQS[i] <- in_flows(C_seq,Dr_seq[i],theta_seq[i],tau_u) - out_flows(C_seq[i],Dr_seq,theta_seq)#
+		}#
+	}#
+	EQS#
+}#
+#
+solve_full_web <- function(theta_seq,Dr_seq,R0,tau_u){#
+	MERA <- theta_seq^(1/1-Dr_seq) ##
+	C_init <- (R0*tau_u*MERA/sum(MERA)^2)^(mean(Dr_seq)-1)#
+	C.sol <- nleqslv(C_init,R_eqs,theta_seq=theta_seq,Dr_seq=Dr_seq,R0=R0,tau_u = tau_u)#
+	if(C.sol[[3]]!=1){#
+		print(C.sol[[4]])#
+	}#
+	C_seq <- C.sol[[1]]#
+	link_mat <- matrix(nrow=length(C_seq),ncol=length(C_seq))#
+	for(i in 1:length(C_seq)){#
+		for(j in 1:length(C_seq)){#
+			link_mat[i,j] <- Ri2j(C_seq[i],Dr_seq[j],theta_seq[j])#
+		}#
+	}#
+	R_seq <- rowSums(link_mat)#
+	#compare with colSums(link_mat)*tau_u#
+	list(link_mat=link_mat,R_seq=R_seq)#
+}
+R_eqs <- function(C_seq,theta_seq,Dr_seq,R0,tau_u){#
+	EQS <- numeric(length(C_seq))#
+	EQS[1] <- R0 - out_flows(C_seq[1],Dr_seq,theta_seq)#
+	for(i in 2:length(C_seq)){#
+			EQS[i] <- in_flows(C_seq,Dr_seq[i],theta_seq[i],tau_u) - out_flows(C_seq[i],Dr_seq,theta_seq)#
+	}#
+	EQS#
+}
+MERA <- theta_seq^(1/1-Dr_seq)
+MERA
+C_init <- (R0*tau_u*MERA/sum(MERA)^2)^(mean(Dr_seq)-1)
+C_init
+(C_init*theta_seq)^(1/(Dr_seq-1))/R0
+(C_init*theta_seq)^(1/(Dr_seq-1))/R0/tau_u
+(C_init*theta_seq)^(1/(Dr_seq-1))*theta_seq/R0/tau_u
+MERA <- theta_seq^(1/(1-Dr_seq))
+C_init <- (R0*tau_u*MERA/sum(MERA)^2)^(mean(Dr_seq)-1)
+(C_init*theta_seq)^(1/(Dr_seq-1))*theta_seq/R0/tau_u
+MERA <- theta_seq^(1/(1-Dr_seq)) ##
+	R_seq <- R0*tau_u*MERA/sum(MERA)#
+	C_init <- (R_seq/sum(MERA^Dr_seq))^(mean(Dr_seq)-1)
+(C_init*theta_seq)^(1/(Dr_seq-1))*theta_seq/R0/tau_u
+MERA <- theta_seq^(1/(1-Dr_seq))
+R_seq <- R0*tau_u*MERA/sum(MERA)
+R_seq
+MERA_R <- theta_seq^(Dr_seq/(1-Dr_seq)) ##
+	R_seq <- R0*tau_u*MERA_R/sum(MERA_R)#
+	C_init <- (R_seq/sum(MERA_R))^(mean(Dr_seq)-1)
+(C_init*theta_seq)^(1/(Dr_seq-1))*theta_seq/R0/tau_u
+MERA_R <- theta_seq^(Dr_seq/(1-Dr_seq))
+R_seq <- R0*tau_u*MERA_R/sum(MERA_R)
+R_seq
+sum(MERA_R)
+C_init <- (R_seq/sum(MERA_R))^(mean(Dr_seq)-1)
+C_init
+(C_init*theta_seq)^(1/(Dr_seq-1))*theta_seq
+R_seq
+MERA_R <- theta_seq^(Dr_seq/(1-Dr_seq)) ##
+	R_seq <- R0*tau_u*MERA_R/sum(MERA_R)#
+	C_init <- (R_seq/sum(MERA_R))^(mean(Dr_seq)-1)
+C_init^(1/(mean(Dr_seq)-1))*sum(MERA_R)
+C_init[1]^(1/(mean(Dr_seq)-1))*sum(MERA_R)
+R_seq[1]
+MERA_R[1]*sum(C_init^(1/(Dr_seq[1]-1)))
+MERA_R <- theta_seq^(Dr_seq/(1-Dr_seq)) ##
+	C0 <- (R0*tau_u/sum(MERA_R))^(mean(Dr_seq)-1)#
+	R_seq <- R0*tau_u*MERA_R/sum(MERA_R)#
+	C_init <- c(C0,(R_seq/sum(MERA_R))^(mean(Dr_seq)-1))
+C_init
+R0
+R0*tau_u
+R_seq
+mean(Dr_seq)-1
+theta_seq
+C.sol <- nleqslv(C_init,R_eqs,theta_seq=theta_seq,Dr_seq=Dr_seq,R0=R0,tau_u = tau_u)
+C_init
+C_seq=C_init
+EQS <- numeric(length(C_seq))
+EQS[1] <- R0 - out_flows(C_seq[1],Dr_seq,theta_seq)
+EQS[1]
+for(i in 2:length(C_seq)){#
+			EQS[i] <- in_flows(C_seq,Dr_seq[i],theta_seq[i],tau_u) - out_flows(C_seq[i],Dr_seq,theta_seq)#
+	}#
+	EQS
+i
+in_flows(C_seq,Dr_seq[i],theta_seq[i],tau_u)
+out_flows(C_seq[i],Dr_seq,theta_seq)
+Dr_seq[i]
+R_eqs <- function(C_seq,theta_seq,Dr_seq,R0,tau_u){#
+	EQS <- numeric(length(C_seq))#
+	EQS[1] <- R0 - out_flows(C_seq[1],Dr_seq,theta_seq)#for fundamental resource#
+	for(i in 2:length(C_seq)){#
+			EQS[i] <- in_flows(C_seq,Dr_seq[i-1],theta_seq[i-1],tau_u) - out_flows(C_seq[i],Dr_seq,theta_seq)#
+	}#
+	EQS#
+}
+C.sol <- nleqslv(C_init,R_eqs,theta_seq=theta_seq,Dr_seq=Dr_seq,R0=R0,tau_u = tau_u)
+C.sol
+C_seq <- C.sol[[1]]
+link_mat <- matrix(nrow=length(C_seq),ncol=length(C_seq))
+for(i in 1:length(C_seq)){#
+		for(j in 1:length(C_seq)){#
+			link_mat[i,j] <- Ri2j(C_seq[i],Dr_seq[j],theta_seq[j])#
+		}#
+	}#
+	R_seq <- rowSums(link_mat)
+link_mat
+link_mat <- matrix(nrow=length(C_seq),ncol=length(C_seq)-1)#
+	for(i in 1:length(C_seq)){#
+		for(j in 1:(length(C_seq)-1)){#
+			link_mat[i,j] <- Ri2j(C_seq[i],Dr_seq[j],theta_seq[j])#
+		}#
+	}
+link_mat
+R_seq <- rowSums(link_mat)
+R_seq
+theta_seq <- c(1,3)
+MERA_R <- theta_seq^(Dr_seq/(1-Dr_seq)) ##
+	C0 <- (R0*tau_u/sum(MERA_R))^(mean(Dr_seq)-1)#
+	R_seq <- R0*tau_u*MERA_R/sum(MERA_R)#
+	C_init <- c(C0,(R_seq/sum(MERA_R))^(mean(Dr_seq)-1))#
+	C.sol <- nleqslv(C_init,R_eqs,theta_seq=theta_seq,Dr_seq=Dr_seq,R0=R0,tau_u = tau_u)
+C.sol
+C_seq <- C.sol[[1]]#
+	link_mat <- matrix(nrow=length(C_seq),ncol=length(C_seq)-1)#
+	for(i in 1:length(C_seq)){#
+		for(j in 1:(length(C_seq)-1)){#
+			link_mat[i,j] <- Ri2j(C_seq[i],Dr_seq[j],theta_seq[j])#
+		}#
+	}#
+	R_seq <- rowSums(link_mat)
+R_seq
+link_mat
+Dr_seq <- rep(0.5,10)
+theta_seq <- runif(10,1,3)
+MERA_R <- theta_seq^(Dr_seq/(1-Dr_seq)) ##
+	C0 <- (R0*tau_u/sum(MERA_R))^(mean(Dr_seq)-1)#
+	R_seq <- R0*tau_u*MERA_R/sum(MERA_R)#
+	C_init <- c(C0,(R_seq/sum(MERA_R))^(mean(Dr_seq)-1))#
+	C.sol <- nleqslv(C_init,R_eqs,theta_seq=theta_seq,Dr_seq=Dr_seq,R0=R0,tau_u = tau_u)
+C.sol
+C_seq <- C.sol[[1]]#
+	link_mat <- matrix(nrow=length(C_seq),ncol=length(C_seq)-1)#
+	for(i in 1:length(C_seq)){#
+		for(j in 1:(length(C_seq)-1)){#
+			link_mat[i,j] <- Ri2j(C_seq[i],Dr_seq[j],theta_seq[j])#
+		}#
+	}#
+	R_seq <- rowSums(link_mat)
+R_seq
+link_mat
+Dr_seq <- rnorm(10,0.5,0.5)
+Dr_seq
+Dr_seq <- rnorm(10,0.5,0.3)
+Dr_seq
+Dr_seq <- runif(10,0,0.8)
+Dr_seq
+MERA_R <- theta_seq^(Dr_seq/(1-Dr_seq)) ##
+	C0 <- (R0*tau_u/sum(MERA_R))^(mean(Dr_seq)-1)#
+	R_seq <- R0*tau_u*MERA_R/sum(MERA_R)#
+	C_init <- c(C0,(R_seq/sum(MERA_R))^(mean(Dr_seq)-1))#
+	C.sol <- nleqslv(C_init,R_eqs,theta_seq=theta_seq,Dr_seq=Dr_seq,R0=R0,tau_u = tau_u)
+C.sol
+C_seq <- C.sol[[1]]#
+	link_mat <- matrix(nrow=length(C_seq),ncol=length(C_seq)-1)#
+	for(i in 1:length(C_seq)){#
+		for(j in 1:(length(C_seq)-1)){#
+			link_mat[i,j] <- Ri2j(C_seq[i],Dr_seq[j],theta_seq[j])#
+		}#
+	}#
+	R_seq <- rowSums(link_mat)
+link_mat
+R_seq
+theta_seq <- 2*Dr_seq
+MERA_R <- theta_seq^(Dr_seq/(1-Dr_seq)) ##
+	C0 <- (R0*tau_u/sum(MERA_R))^(mean(Dr_seq)-1)#
+	R_seq <- R0*tau_u*MERA_R/sum(MERA_R)#
+	C_init <- c(C0,(R_seq/sum(MERA_R))^(mean(Dr_seq)-1))#
+	C.sol <- nleqslv(C_init,R_eqs,theta_seq=theta_seq,Dr_seq=Dr_seq,R0=R0,tau_u = tau_u)
+print(C.sol[[4]])
+C_seq <- C.sol[[1]]#
+	link_mat <- matrix(nrow=length(C_seq),ncol=length(C_seq)-1)#
+	for(i in 1:length(C_seq)){#
+		for(j in 1:(length(C_seq)-1)){#
+			link_mat[i,j] <- Ri2j(C_seq[i],Dr_seq[j],theta_seq[j])#
+		}#
+	}#
+	R_seq <- rowSums(link_mat)#
+	#compare with colSums(link_mat)*tau_u#
+	list(link_mat=link_mat,R_seq=R_seq)
+theta_seq <- 1/Dr_seq
+MERA_R <- theta_seq^(Dr_seq/(1-Dr_seq)) ##
+	C0 <- (R0*tau_u/sum(MERA_R))^(mean(Dr_seq)-1)#
+	R_seq <- R0*tau_u*MERA_R/sum(MERA_R)#
+	C_init <- c(C0,(R_seq/sum(MERA_R))^(mean(Dr_seq)-1))#
+	C.sol <- nleqslv(C_init,R_eqs,theta_seq=theta_seq,Dr_seq=Dr_seq,R0=R0,tau_u = tau_u)
+print(C.sol[[4]])
+C_seq <- C.sol[[1]]#
+	link_mat <- matrix(nrow=length(C_seq),ncol=length(C_seq)-1)#
+	for(i in 1:length(C_seq)){#
+		for(j in 1:(length(C_seq)-1)){#
+			link_mat[i,j] <- Ri2j(C_seq[i],Dr_seq[j],theta_seq[j])#
+		}#
+	}#
+	R_seq <- rowSums(link_mat)#
+	#compare with colSums(link_mat)*tau_u#
+	list(link_mat=link_mat,R_seq=R_seq)
+Dr_seq
+sum(link_mat[1.])
+sum(link_mat[1,])
