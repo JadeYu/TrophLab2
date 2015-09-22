@@ -1,0 +1,773 @@
+nsample <- 1000
+S <- sample_richness(surfaces[[1]],D=2)
+S
+D_seq <- 2^(1:6)
+analyses of the simulated surface#
+##Finish SAR!!#
+#
+plot_abund <- function(surface,Sp){#
+	xlim <- ylim <- sqrt(dim(surface)[1])#
+		plot(1~1,xlim=c(0,xlim),ylim=c(0,ylim),col=NA,xlab=paste("spatial distribution W-E (Sp",Sp,")",sep=""),ylab="N-S")#
+		indice <- 1:dim(surface)[1]#
+		y <- floor(indice/xlim)#
+		x <- indice%%xlim#
+		exist <- surface[,Sp]>0#
+		N_seq <- surface[,Sp][exist]#
+		points(y[exist]~x[exist],col=paste("gray",80-round(80/max(N_seq)*N_seq),sep=""),pch=16,cex=1)#
+}#
+#
+plot_sp <- function(surface){#
+	richness <- rowSums(surface>0)#
+}#
+#
+plot_SSAD <- function(surface, Sp){#
+	abundance <- surface[,Sp]#
+	hist(abundance,xlab=paste("SSAD (Sp",Sp,sep=""))#
+	Y <- fitdistr(abundance,"negative binomial")$estimate#
+	x_seq <- 0:max(abundance)#
+	nb_seq <- dnbinom(x_seq,Y[1],Y[1]/sum(Y))#
+	lines(x_seq,nb_seq,col=2)#
+	legend("topright",paste("NBD (k=",Y[1],")",sep=""))#
+}#
+#
+plot_SAR <- function(surface,D_seq,nsample){#
+	richness <- matrix(ncol=length(D_seq),nrow=nsample)#
+	for(i in 1:length(D_seq)){#
+		richness[,i] <- as.numeric(replicate(nsample,sample_richness(surface,D_seq[i])))#
+	}#
+	colnames(richness) <- D_seq#
+	A_seq <- D_seq^2#
+	plot(colSums(richness)/nsample~A_seq,xlab="area",ylab="richness")#
+	richness#
+}#
+#
+sample_richness <- function(surface,D){#
+	D <- floor(D)#
+	out <- TRUE#
+	while(out){#
+		rx <- ceiling(runif(1,1,sqrt(dim(surface)[1])/D))#
+		ry <- ceiling(runif(1,1,sqrt(dim(surface)[1])/D))#
+		rx_range <- 1:D + (rx-1)*D#
+		ry_range <- 1:D + (ry-1)*D#
+		out <- sum(range(rx_range)<0|range(rx_range)>sqrt(dim(surface)[1]))|sum(range(ry_range)<0|range(ry_range)>sqrt(dim(surface)[1]))#
+	}#
+	rx_seq <- rep(rx_range,each=D)#
+	ry_seq <- rep(ry_range,D)#
+	i_seq <- (rx_seq-1)*sqrt(dim(surface)[1])+ry_seq#
+	sample <- surface[i_seq,]#
+	richness <- sum(colSums(sample)>0)#
+	richness#
+}#
+#
+plot_envi <- function(envi_mat,envi){#
+	envi_mat <- envi_mat/(max(envi_mat)-min(envi_mat))#
+	envi_mat <- envi_mat-min(envi_mat)-0.5#
+	##rescale it to be on [0,1]#
+	ylim <- dim(envi_mat)[1]#
+	xlim <- dim(envi_mat)[2]#
+	plot(1~1,xlim=c(0,xlim),ylim=c(0,ylim),col=NA,xlab=paste("spatial distribution W-E (",envi,")",sep=""),ylab="N-S")#
+	y <- rep(1:ylim,each=xlim)#
+	x <- rep(1:xlim,ylim)#
+	points(y~x,col=paste("gray",round(as.numeric(envi_mat)+0.5)*100,sep=""),pch=16)#
+}
+plot_SAR(surfaces[[1]],D_seq,nsample)
+i=2
+plot_envi(envi_list[[i]],envis[i])
+x1=seq(0,1,length=50)
+x1
+x2=sqrt(1-x1^2)
+x2
+-x1[37]/x2[37]
+x1[37]/x2[37]*x1[37]
+x3=seq(0.5,0.9,length=30)
+b=x1[37]/x2[37]*x1[37]
+a=-x1[37]/x2[37]
+plot(x2~x1,col=0)
+lines(x2~x1)
+plot(x2~x1,col=0,xlim=c(0,2),ylim=c(0,1.5))
+lines(x2~x1)
+plot(x2~x1,col=0,xlim=c(0,2),ylim=c(0,1.5),xlab="prey1",ylab="prey2")
+lines(x2~x1)
+abline(a,b)
+abline(b,a)
+a=-x2[37]/x1[37]
+b=a*x1[37]
+abline(b,a)
+abline(a,b)
+a
+b
+b=-b
+abline(a,b)
+abline(b,a)
+a
+b=x2[37]-x1[37]*a
+b
+abline(b,a)
+a=-x2[45]/x1[45]
+b=x2[45]-x1[45]*a
+abline(b,a)
+plot(x2~x1,col=0,xlim=c(0,2),ylim=c(0,1.5),xlab="prey1",ylab="prey2")#
+> lines(x2~x1)
+lines(x1,x2)
+abline(b,a)
+abline(a,b)
+a=-x2[45]/x1[45]
+b=x2[45]-x1[45]*a
+a
+b
+abline(b,a)
+x2[45]
+x1[45]
+a
+a=-x1[45]/x2[45]
+b=x2[45]-x1[45]*a
+abline(b,a)
+plot(x2~x1,col=0,xlim=c(0,2),ylim=c(0,1.5),xlab="prey1",ylab="prey2")
+lines(x1,x2)
+abline(b,a)
+plot(x2~x1,col=0,xlim=c(0,2),ylim=c(0,1.5),xlab="prey1",ylab="prey2")
+abline(b,a)
+plot(x2~x1,col=0,xlim=c(0,2),ylim=c(0,1.5),xlab="prey1",ylab="prey2")
+lines(x1,x2)
+abline(b,a,col=2)
+?text
+text(1,1.2,"max(R_predator)=N_prey1/theta_predator1+N_prey2/theta_predator2")
+text(1,1.2,"max(R_predator)=N_prey1/theta_predator1+N_prey2/theta_predator2",cex=0.5)
+plot(x2~x1,col=0,xlim=c(0,2),ylim=c(0,1.5),xlab="prey1",ylab="prey2")
+lines(x1,x2)
+abline(b,a,col=2)
+text(1.2,1.2,"max(R_predator)=N_prey1/theta_predator1+N_prey2/theta_predator2",cex=0.7)
+plot(x2~x1,col=0,xlim=c(0,2),ylim=c(0,1.5),xlab="prey1",ylab="prey2")
+lines(x1,x2)
+abline(b,a,col=2)
+text(1.2,1.2,"max(R_predator)=N_prey1/theta_pred1+N_prey2/theta_pred2",cex=0.7)
+plot(x2~x1,col=0,xlim=c(0,2),ylim=c(0,1.5),xlab="prey1",ylab="prey2")
+lines(x1,x2)
+abline(b,a,col=2)
+plot(x2~x1,col=0,xlim=c(0,2),ylim=c(0,1.5),xlab="g_prey1",ylab="g_prey2")
+lines(x1,x2)
+abline(b,a,col=2)
+k_seq <- seq(0.01,10,by=0.05)
+length(k_seq)
+library(MASS)
+?fitdistr
+k_fit <- c()
+for(k in k_seq){sample <- rnbinom(100,k,mu=10),sample=sample[sample>0],k_fit <- c(k_fit,fitdistr(sample,"negative binomial")$estimate[1])}
+for(k in k_seq){sample <- rnbinom(100,k,mu=10);sample=sample[sample>0],k_fit <- c(k_fit,fitdistr(sample,"negative binomial")$estimate[1])}
+for(k in k_seq){sample <- rnbinom(100,k,mu=10);sample=sample[sample>0];k_fit <- c(k_fit,fitdistr(sample,"negative binomial")$estimate[1])}
+k_fit
+plot(k_fit~k_seq,xlab="actual k(nsample=100,mu=10)",ylab="fitted k (to zero-removed samples)")
+plot(k_fit[1:100]~k_seq[1:100],xlab="actual k(nsample=100,mu=10)",ylab="fitted k (to zero-removed samples)")
+plot(k_fit[1:50]~k_seq[1:50],xlab="actual k(nsample=100,mu=10)",ylab="fitted k (to zero-removed samples)")
+for(k in k_seq){for(i in 1:30){kfit <- c();sample <- rnbinom(100,k,mu=10);sample=sample[sample>0];kfit <- c(kfit,fitdistr(sample,"negative binomial"$estimate[1])};k_fit <- c(k_fit,mean(kfit))}
+for(k in k_seq){#
+	for(i in 1:30){#
+		kfit <- c()#
+		sample <- rnbinom(100,k,mu=10)#
+		sample <- sample[sample>0]#
+		kfit <- c(kfit,fitdistr(sample,"negative binomial"$estimate[1])#
+	}#
+	k_fit <- c(k_fit,mean(kfit))#
+}
+k=1
+for(i in 1:30){#
+		kfit <- c()#
+		sample <- rnbinom(100,k,mu=10)#
+		sample <- sample[sample>0]#
+		kfit <- c(kfit,fitdistr(sample,"negative binomial"$estimate[1])#
+	}
+for(i in 1:30){#
+		kfit <- c()#
+		sample <- rnbinom(100,k,mu=10)#
+		sample <- sample[sample>0]#
+		kfit <- c(kfit,fitdistr(sample,"negative binomial"$estimate[1])
+}
+kfit <- c()#
+		sample <- rnbinom(100,k,mu=10)#
+		sample <- sample[sample>0]#
+		kfit <- c(kfit,fitdistr(sample,"negative binomial"$estimate[1])
+)
+for(k in k_seq){#
+	for(i in 1:30){#
+		kfit <- c()#
+		sample <- rnbinom(100,k,mu=10)#
+		sample <- sample[sample>0]#
+		kfit <- c(kfit,fitdistr(sample,"negative binomial")$estimate[1])#
+	}#
+	k_fit <- c(k_fit,mean(kfit))#
+}
+kfit
+for(i in 1:30){#
+		kfit <- c()#
+		sample <- rnbinom(100,k,mu=10)#
+		sample <- sample[sample>0]#
+		kfit <- c(kfit,fitdistr(sample,"negative binomial")$estimate[1])#
+	}
+kfit
+kfit <- numeric()#
+	for(i in 1:30){#
+		sample <- rnbinom(100,k,mu=10)#
+		sample <- sample[sample>0]#
+		kfit[i] <- fitdistr(sample,"negative binomial")$estimate[1]#
+	}
+kfit
+for(k in k_seq){#
+	kfit <- numeric()#
+	for(i in 1:30){#
+		sample <- rnbinom(100,k,mu=10)#
+		sample <- sample[sample>0]#
+		kfit[i] <- fitdistr(sample,"negative binomial")$estimate[1]#
+	}#
+	k_fit <- c(k_fit,mean(kfit))#
+}
+k_fit
+plot(k_fit[1:50]~k_seq[1:50],xlab="actual k(nsample=100,mu=10)",ylab="fitted k (to zero-removed samples)")
+plot(k_fit[1:50]~k_seq[1:50],xlab="actual k(mu=10,nsample=100,nreplicate=30)",ylab="fitted k (to zero-removed samples)")
+for(k in k_seq){#
+	kfit <- numeric()#
+	for(i in 1:20){#
+		sample <- rnbinom(100,k,mu=10)#
+		sample <- sample[sample>0]#
+		kfit[i] <- fitdistr(sample,"negative binomial")$estimate[1]#
+	}#
+	k_fit <- c(k_fit,mean(kfit))#
+}
+plot(k_fit[1:50]~k_seq[1:50],xlab="actual k(mu=10,nsample=100,nreplicate=20)",ylab="fitted k (to zero-removed samples)")
+k_fit <- c()
+for(k in k_seq){#
+	kfit <- numeric()#
+	for(i in 1:20){#
+		sample <- rnbinom(100,k,mu=10)#
+		sample <- sample[sample>0]#
+		kfit[i] <- fitdistr(sample,"negative binomial")$estimate[1]#
+	}#
+	k_fit <- c(k_fit,mean(kfit))#
+}
+plot(k_fit[1:50]~k_seq[1:50],xlab="actual k(mu=10,nsample=100,nreplicate=20)",ylab="fitted k (to zero-removed samples)")
+k_seq <- k_seq[1:50]
+k_fit <- c()#
+for(k in k_seq){#
+	kfit <- numeric()#
+	for(i in 1:50){#
+		sample <- rnbinom(1000,k,mu=10)#
+		sample <- sample[sample>0]#
+		kfit[i] <- fitdistr(sample,"negative binomial")$estimate[1]#
+	}#
+	k_fit <- c(k_fit,mean(kfit))#
+}#
+#
+plot(k_fit~k_seq,xlab="actual k(mu=10,nsample=1000,nreplicate=50)",ylab="fitted k (to zero-removed samples)")
+abline(a=0,b=1,col=2)
+plot(k_fit~k_seq,ylim=c(0,max(k_fit),xlab="actual k(mu=10,nsample=1000,nreplicate=50)",ylab="fitted k (to zero-removed samples)")
+plot(k_fit~k_seq,ylim=c(0,max(k_fit)),xlab="actual k(mu=10,nsample=1000,nreplicate=50)",ylab="fitted k (to zero-removed samples)")
+abline(a=0,b=1,col=2)
+legend("bottomright","x=y",lty=1,col=2)
+k_fit <- c()#
+for(k in k_seq){#
+	kfit <- numeric()#
+	for(i in 1:50){#
+		sample <- rnbinom(1000,k,mu=2)#
+		sample <- sample[sample>0]#
+		kfit[i] <- fitdistr(sample,"negative binomial")$estimate[1]#
+	}#
+	k_fit <- c(k_fit,mean(kfit))#
+}#
+#
+plot(k_fit~k_seq,ylim=c(0,max(k_fit)),xlab="actual k(mu=2,nsample=1000,nreplicate=50)",ylab="fitted k (to zero-removed samples)")#
+#
+abline(a=0,b=1,col=2)#
+#
+legend("bottomright","x=y",lty=1,col=2)
+k_fit <- c()#
+for(k in k_seq){#
+	kfit <- numeric()#
+	for(i in 1:50){#
+		sample <- rnbinom(1000,k,mu=50)#
+		sample <- sample[sample>0]#
+		kfit[i] <- fitdistr(sample,"negative binomial")$estimate[1]#
+	}#
+	k_fit <- c(k_fit,mean(kfit))#
+}#
+#
+plot(k_fit~k_seq,ylim=c(0,max(k_fit)),xlab="actual k(mu=2,nsample=1000,nreplicate=50)",ylab="fitted k (to zero-removed samples)")#
+#
+abline(a=0,b=1,col=2)#
+#
+legend("bottomright","x=y",lty=1,col=2)
+plot(k_fit~k_seq,ylim=c(0,max(k_fit)),xlab="actual k(mu=50,nsample=1000,nreplicate=50)",ylab="fitted k (to zero-removed samples)")#
+#
+abline(a=0,b=1,col=2)#
+#
+legend("bottomright","x=y",lty=1,col=2)
+factorial(10)
+exp(10*(log(10))-10)
+exp(20*(log(20))-20)
+factorial(20)
+n=10
+n*log(n)-n
+factorial(n)
+log(factorial(n))
+n=20
+log(factorial(n))
+n*log(n)-n
+n=50
+log(factorial(n))
+n*log(n)-n
+exp(15)-exp(13)
+(exp(15)-exp(13))/exp(15)
+library(nleqslv)
+growth_function_compare <- function(paras,R){##taking all the other species at equilibrium!#
+	r_range <- c(seq(5,20,by=0.2),seq(0.005,5,by=0.005),seq(0.0005,0.005,by=0.0005))#
+	Ns <- gs <- matrix(nrow=dim(paras)[1],ncol=length(r_range))#
+	for(i in 1:dim(paras)[1]){#
+		theta_seq <- c(paras[i,1],1)#
+		Dr_seq <- rep(paras[i,2],2)#
+		solution <- get_ri(theta_seq,Dr_seq,R,r_range)#
+		Ns[i,] <- sort(solution$N_seq)#
+		gs[i,] <- sort(solution$g_seq,decreasing=T)#
+		ltys <- c(1,5,3,4)#
+		if(i==1){#
+			plot(gs[i,]~Ns[i,],pch=i,xlim=c(20,150),xlab="N1",ylab="g1",col=0)#
+		}#
+		lines(Ns[i,],gs[i,],lty=ltys[i],lwd=2)#
+	}#
+	plot.new()#
+	legend("bottomleft",c("t1=1, Dr=0.1","t1=3, Dr=0.1","t1=1, Dr=0.8","t1=3, Dr=0.8"),cex=2,lty=ltys,lwd=2)#
+	list(Ns=Ns,gs=gs)#
+}
+growth <- growth_function_compare(paras,R)
+growth_function_compare <- function(paras,R){##taking all the other species at equilibrium!#
+	r_range <- c(seq(5,20,by=0.2),seq(0.005,5,by=0.005),seq(0.0005,0.005,by=0.0005))#
+	Ns <- gs <- matrix(nrow=dim(paras)[1],ncol=length(r_range))#
+	for(i in 1:dim(paras)[1]){#
+		theta_seq <- c(paras[i,1],1)#
+		Dr_seq <- rep(paras[i,2],2)#
+		solution <- get_ri(theta_seq,Dr_seq,R,r_range)#
+		Ns[i,] <- sort(solution$N_seq)#
+		gs[i,] <- sort(solution$g_seq,decreasing=T)#
+		ltys <- c(1,5,3,4)#
+		if(i==1){#
+			plot(gs[i,]~Ns[i,],pch=i,xlim=c(20,150),xlab="N1",ylab="g1",col=0)#
+		}#
+		lines(Ns[i,],gs[i,],lty=ltys[i],lwd=2)#
+	}#
+	plot.new()#
+	legend("bottomleft",c("t1=1, Dr=0.1","t1=3, Dr=0.1","t1=1, Dr=0.5","t1=3, Dr=0.5"),cex=2,lty=ltys,lwd=2)#
+	list(Ns=Ns,gs=gs)#
+}
+library(nleqslv)
+C_seq <- c(300,50)#
+re_seq <- c(10,10)#
+dr_seq1 <- c(0,0)#
+dr_seq2 <- c(0.5,0.5)#
+dr_seq3 <- c(0.999,0.999)#
+R <- sum(re_seq*C_seq)#
+nsteps <- 80#
+time_track1 <- dynamics(C_seq,R,dr_seq1,re_seq,nsteps)#
+time_track2 <- dynamics(C_seq,R,dr_seq2,re_seq,nsteps)#
+time_track3 <- dynamics(C_seq,R,dr_seq3,re_seq,nsteps)#
+time_track4 <- dynamics(C_seq,R/5,dr_seq2,re_seq/5,nsteps)#
+time_track5 <- dynamics(C_seq,R/10,dr_seq2,re_seq/10,nsteps)#
+plot(1~1,xlab="",ylab="",xlim=c(0,nsteps),ylim=c(0,400),col=0)#
+plot_dynamics(time_track1,3)#
+plot_dynamics(time_track2,2)#
+plot_dynamics(time_track3,1)#
+plot_dynamics(time_track4,4)#
+plot_dynamics(time_track5,5)#
+abline(h=0,col=2,lty=2)
+population dynamics#
+C_seq <- c(300,50)#
+re_seq <- c(10,12)#
+dr_seq1 <- c(0,0)#
+dr_seq2 <- c(0.5,0.5)#
+dr_seq3 <- c(0.97,0.97)#
+R <- sum(re_seq*C_seq)#
+nsteps <- 80#
+time_track1 <- dynamics(C_seq,R,dr_seq1,re_seq,nsteps)#
+time_track2 <- dynamics(C_seq,R,dr_seq2,re_seq,nsteps)#
+time_track3 <- dynamics(C_seq,R,dr_seq3,re_seq,nsteps)#
+time_track4 <- dynamics(C_seq,R/5,dr_seq2,re_seq/5,nsteps)#
+time_track5 <- dynamics(C_seq,R/10,dr_seq2,re_seq/10,nsteps)#
+plot(1~1,xlab="",ylab="",xlim=c(0,nsteps),ylim=c(0,400),col=0)#
+plot_dynamics(time_track1,3)#
+plot_dynamics(time_track2,2)#
+plot_dynamics(time_track3,1)#
+plot_dynamics(time_track4,4)#
+plot_dynamics(time_track5,5)#
+abline(h=0,col=2,lty=2)
+nsteps <- 150#
+time_track1 <- dynamics(C_seq,R,dr_seq1,re_seq,nsteps)#
+time_track2 <- dynamics(C_seq,R,dr_seq2,re_seq,nsteps)#
+time_track3 <- dynamics(C_seq,R,dr_seq3,re_seq,nsteps)#
+time_track4 <- dynamics(C_seq,R/5,dr_seq2,re_seq/5,nsteps)#
+time_track5 <- dynamics(C_seq,R/10,dr_seq2,re_seq/10,nsteps)#
+plot(1~1,xlab="",ylab="",xlim=c(0,nsteps),ylim=c(0,400),col=0)#
+plot_dynamics(time_track1,3)#
+plot_dynamics(time_track2,2)#
+plot_dynamics(time_track3,1)#
+plot_dynamics(time_track4,4)#
+plot_dynamics(time_track5,5)#
+abline(h=0,col=2,lty=2)
+C_seq <- c(300,50)#
+re_seq <- c(10,20)#
+dr_seq1 <- c(0,0)#
+dr_seq2 <- c(0.5,0.5)#
+dr_seq3 <- c(0.95,0.95)#
+R <- sum(re_seq*C_seq)#
+nsteps <- 80#
+time_track1 <- dynamics(C_seq,R,dr_seq1,re_seq,nsteps)#
+time_track2 <- dynamics(C_seq,R,dr_seq2,re_seq,nsteps)#
+time_track3 <- dynamics(C_seq,R,dr_seq3,re_seq,nsteps)#
+time_track4 <- dynamics(C_seq,R/5,dr_seq2,re_seq/5,nsteps)#
+time_track5 <- dynamics(C_seq,R/10,dr_seq2,re_seq/10,nsteps)#
+plot(1~1,xlab="",ylab="",xlim=c(0,nsteps),ylim=c(0,400),col=0)#
+plot_dynamics(time_track1,3)#
+plot_dynamics(time_track2,2)#
+plot_dynamics(time_track3,1)#
+plot_dynamics(time_track4,4)#
+plot_dynamics(time_track5,5)#
+abline(h=0,col=2,lty=2)#
+#
+plot.new()#
+legend("bottomleft",c("Dr=0,theta=theta0","Dr=0.5,theta=theta0","Dr=0.5,theta=0.1*theta0","Dr=0.5,theta=0.2*theta0","Dr=1,theta=theta0"),cex=2,lty=c(3,2,5,4,1),lwd=2)
+plot.new()#
+legend("bottomleft",c("Dr=0,theta=theta0","Dr=0.5,theta=theta0","Dr=0.5,theta=0.1*theta0","Dr=0.5,theta=0.2*theta0","Dr=1,theta=theta0"),cex=1.5,lty=c(3,2,5,4,1),lwd=2)
+plot.new()#
+legend("bottomleft",c("Dr=0,ti=ti0","Dr=0.5,ti=ti0","Dr=0.5,ti=0.1*ti0","Dr=0.5,ti=0.2*t0","Dr=1,ti=ti0"),cex=2,lty=c(3,2,5,4,1),lwd=2)
+C_seq <- c(300,50)#
+re_seq <- c(10,10)#
+dr_seq1 <- c(0,0)#
+dr_seq2 <- c(0.5,0.5)#
+dr_seq3 <- c(0.95,0.95)#
+R <- sum(re_seq*C_seq)#
+nsteps <- 100#
+time_track1 <- dynamics(C_seq,R,dr_seq1,re_seq,nsteps)#
+time_track2 <- dynamics(C_seq,R,dr_seq2,re_seq,nsteps)#
+time_track3 <- dynamics(C_seq,R,dr_seq3,re_seq,nsteps)#
+time_track4 <- dynamics(C_seq,R/5,dr_seq2,re_seq/5,nsteps)#
+time_track5 <- dynamics(C_seq,R/10,dr_seq2,re_seq/10,nsteps)#
+plot(1~1,xlab="",ylab="",xlim=c(0,nsteps),ylim=c(0,400),col=0)#
+plot_dynamics(time_track1,3)#
+plot_dynamics(time_track2,2)#
+plot_dynamics(time_track3,1)#
+plot_dynamics(time_track4,4)#
+plot_dynamics(time_track5,5)#
+abline(h=0,col=2,lty=2)
+C_seq <- c(300,50)#
+re_seq <- c(10,10)#
+dr_seq1 <- c(0,0)#
+dr_seq2 <- c(0.5,0.5)#
+dr_seq3 <- c(0.999,0.999)#
+R <- sum(re_seq*C_seq)#
+nsteps <- 100#
+time_track1 <- dynamics(C_seq,R,dr_seq1,re_seq,nsteps)#
+time_track2 <- dynamics(C_seq,R,dr_seq2,re_seq,nsteps)#
+time_track3 <- dynamics(C_seq,R,dr_seq3,re_seq,nsteps)#
+time_track4 <- dynamics(C_seq,R/5,dr_seq2,re_seq/5,nsteps)#
+time_track5 <- dynamics(C_seq,R/7,dr_seq2,re_seq/7,nsteps)#
+plot(1~1,xlab="",ylab="",xlim=c(0,nsteps),ylim=c(0,400),col=0)#
+plot_dynamics(time_track1,3)#
+plot_dynamics(time_track2,2)#
+plot_dynamics(time_track3,1)#
+plot_dynamics(time_track4,4)#
+plot_dynamics(time_track5,5)#
+abline(h=0,col=2,lty=2)
+C_seq <- c(300,50)#
+re_seq <- c(10,10)#
+dr_seq1 <- c(0,0)#
+dr_seq2 <- c(0.5,0.5)#
+dr_seq3 <- c(0.999,0.999)#
+R <- sum(re_seq*C_seq)#
+nsteps <- 80#
+time_track1 <- dynamics(C_seq,R,dr_seq1,re_seq,nsteps)#
+time_track2 <- dynamics(C_seq,R,dr_seq2,re_seq,nsteps)#
+time_track3 <- dynamics(C_seq,R,dr_seq3,re_seq,nsteps)#
+time_track4 <- dynamics(C_seq,R/5,dr_seq2,re_seq/5,nsteps)#
+time_track5 <- dynamics(C_seq,R/7,dr_seq2,re_seq/7,nsteps)#
+plot(1~1,xlab="",ylab="",xlim=c(0,nsteps),ylim=c(0,400),col=0)#
+plot_dynamics(time_track1,3)#
+plot_dynamics(time_track2,2)#
+plot_dynamics(time_track3,1)#
+plot_dynamics(time_track4,4)#
+plot_dynamics(time_track5,5)#
+abline(h=0,col=2,lty=2)
+C_seq <- c(300,50)#
+re_seq <- c(10,10)#
+dr_seq1 <- c(0,0)#
+dr_seq2 <- c(0.5,0.5)#
+dr_seq3 <- c(0.999,0.999)#
+R <- sum(re_seq*C_seq)#
+nsteps <- 100#
+time_track1 <- dynamics(C_seq,R,dr_seq1,re_seq,nsteps)#
+time_track2 <- dynamics(C_seq,R,dr_seq2,re_seq,nsteps)#
+time_track3 <- dynamics(C_seq,R,dr_seq3,re_seq,nsteps)#
+time_track4 <- dynamics(C_seq,R/5,dr_seq2,re_seq/5,nsteps)#
+time_track5 <- dynamics(C_seq,R/7,dr_seq2,re_seq/7,nsteps)#
+plot(1~1,xlab="",ylab="",xlim=c(0,nsteps),ylim=c(0,400),col=0)#
+plot_dynamics(time_track1,3)#
+plot_dynamics(time_track2,2)#
+plot_dynamics(time_track3,1)#
+plot_dynamics(time_track4,4)#
+plot_dynamics(time_track5,5)#
+abline(h=0,col=2,lty=2)
+C_seq <- c(300,50)#
+re_seq <- c(10,20)#
+dr_seq1 <- c(0,0)#
+dr_seq2 <- c(0.5,0.5)#
+dr_seq3 <- c(0.95,0.95)#
+R <- sum(re_seq*C_seq)#
+nsteps <- 100#
+time_track1 <- dynamics(C_seq,R,dr_seq1,re_seq,nsteps)#
+time_track2 <- dynamics(C_seq,R,dr_seq2,re_seq,nsteps)#
+time_track3 <- dynamics(C_seq,R,dr_seq3,re_seq,nsteps)#
+time_track4 <- dynamics(C_seq,R/5,dr_seq2,re_seq/5,nsteps)#
+time_track5 <- dynamics(C_seq,R/10,dr_seq2,re_seq/10,nsteps)#
+plot(1~1,xlab="",ylab="",xlim=c(0,nsteps),ylim=c(0,400),col=0)#
+plot_dynamics(time_track1,3)#
+plot_dynamics(time_track2,2)#
+plot_dynamics(time_track3,1)#
+plot_dynamics(time_track4,4)#
+plot_dynamics(time_track5,5)#
+abline(h=0,col=2,lty=2)
+C_seq <- c(300,50)#
+re_seq <- c(10,11)#
+dr_seq1 <- c(0,0)#
+dr_seq2 <- c(0.5,0.5)#
+dr_seq3 <- c(0.95,0.95)#
+R <- sum(re_seq*C_seq)#
+nsteps <- 150#
+time_track1 <- dynamics(C_seq,R,dr_seq1,re_seq,nsteps)#
+time_track2 <- dynamics(C_seq,R,dr_seq2,re_seq,nsteps)#
+time_track3 <- dynamics(C_seq,R,dr_seq3,re_seq,nsteps)#
+time_track4 <- dynamics(C_seq,R/5,dr_seq2,re_seq/5,nsteps)#
+time_track5 <- dynamics(C_seq,R/10,dr_seq2,re_seq/10,nsteps)#
+plot(1~1,xlab="",ylab="",xlim=c(0,nsteps),ylim=c(0,400),col=0)#
+plot_dynamics(time_track1,3)#
+plot_dynamics(time_track2,2)#
+plot_dynamics(time_track3,1)#
+plot_dynamics(time_track4,4)#
+plot_dynamics(time_track5,5)#
+abline(h=0,col=2,lty=2)
+C_seq <- c(300,50)#
+re_seq <- c(10,11)#
+dr_seq1 <- c(0,0)#
+dr_seq2 <- c(0.5,0.5)#
+dr_seq3 <- c(0.97,0.97)#
+R <- sum(re_seq*C_seq)#
+nsteps <- 150#
+time_track1 <- dynamics(C_seq,R,dr_seq1,re_seq,nsteps)#
+time_track2 <- dynamics(C_seq,R,dr_seq2,re_seq,nsteps)#
+time_track3 <- dynamics(C_seq,R,dr_seq3,re_seq,nsteps)#
+time_track4 <- dynamics(C_seq,R/5,dr_seq2,re_seq/5,nsteps)#
+time_track5 <- dynamics(C_seq,R/10,dr_seq2,re_seq/10,nsteps)#
+plot(1~1,xlab="",ylab="",xlim=c(0,nsteps),ylim=c(0,400),col=0)#
+plot_dynamics(time_track1,3)#
+plot_dynamics(time_track2,2)#
+plot_dynamics(time_track3,1)#
+plot_dynamics(time_track4,4)#
+plot_dynamics(time_track5,5)#
+abline(h=0,col=2,lty=2)
+nsteps <- 200#
+time_track1 <- dynamics(C_seq,R,dr_seq1,re_seq,nsteps)#
+time_track2 <- dynamics(C_seq,R,dr_seq2,re_seq,nsteps)#
+time_track3 <- dynamics(C_seq,R,dr_seq3,re_seq,nsteps)#
+time_track4 <- dynamics(C_seq,R/5,dr_seq2,re_seq/5,nsteps)#
+time_track5 <- dynamics(C_seq,R/10,dr_seq2,re_seq/10,nsteps)#
+plot(1~1,xlab="",ylab="",xlim=c(0,nsteps),ylim=c(0,400),col=0)#
+plot_dynamics(time_track1,3)#
+plot_dynamics(time_track2,2)#
+plot_dynamics(time_track3,1)#
+plot_dynamics(time_track4,4)#
+plot_dynamics(time_track5,5)#
+abline(h=0,col=2,lty=2)
+C_seq <- c(300,50)#
+re_seq <- c(10,11)#
+dr_seq1 <- c(0,0)#
+dr_seq2 <- c(0.5,0.5)#
+dr_seq3 <- c(0.98,0.98)#
+R <- sum(re_seq*C_seq)#
+nsteps <- 200#
+time_track1 <- dynamics(C_seq,R,dr_seq1,re_seq,nsteps)#
+time_track2 <- dynamics(C_seq,R,dr_seq2,re_seq,nsteps)#
+time_track3 <- dynamics(C_seq,R,dr_seq3,re_seq,nsteps)#
+time_track4 <- dynamics(C_seq,R/5,dr_seq2,re_seq/5,nsteps)#
+time_track5 <- dynamics(C_seq,R/10,dr_seq2,re_seq/10,nsteps)#
+plot(1~1,xlab="",ylab="",xlim=c(0,nsteps),ylim=c(0,400),col=0)#
+plot_dynamics(time_track1,3)#
+plot_dynamics(time_track2,2)#
+plot_dynamics(time_track3,1)#
+plot_dynamics(time_track4,4)#
+plot_dynamics(time_track5,5)#
+abline(h=0,col=2,lty=2)
+C_seq <- c(300,50)#
+re_seq <- c(10,11)#
+dr_seq1 <- c(0,0)#
+dr_seq2 <- c(0.5,0.5)#
+dr_seq3 <- c(0.98,0.98)#
+R <- sum(re_seq*C_seq)#
+nsteps <- 250#
+time_track1 <- dynamics(C_seq,R,dr_seq1,re_seq,nsteps)#
+time_track2 <- dynamics(C_seq,R,dr_seq2,re_seq,nsteps)#
+time_track3 <- dynamics(C_seq,R,dr_seq3,re_seq,nsteps)#
+time_track4 <- dynamics(C_seq,R/5,dr_seq2,re_seq/5,nsteps)#
+time_track5 <- dynamics(C_seq,R/10,dr_seq2,re_seq/10,nsteps)#
+plot(1~1,xlab="",ylab="",xlim=c(0,nsteps),ylim=c(0,400),col=0)#
+plot_dynamics(time_track1,3)#
+plot_dynamics(time_track2,2)#
+plot_dynamics(time_track3,1)#
+plot_dynamics(time_track4,4)#
+plot_dynamics(time_track5,5)#
+abline(h=0,col=2,lty=2)
+C_seq <- c(300,50)#
+re_seq <- c(10,11)#
+dr_seq1 <- c(0,0)#
+dr_seq2 <- c(0.5,0.5)#
+dr_seq3 <- c(0.985,0.985)#
+R <- sum(re_seq*C_seq)#
+nsteps <- 250#
+time_track1 <- dynamics(C_seq,R,dr_seq1,re_seq,nsteps)#
+time_track2 <- dynamics(C_seq,R,dr_seq2,re_seq,nsteps)#
+time_track3 <- dynamics(C_seq,R,dr_seq3,re_seq,nsteps)#
+time_track4 <- dynamics(C_seq,R/5,dr_seq2,re_seq/5,nsteps)#
+time_track5 <- dynamics(C_seq,R/10,dr_seq2,re_seq/10,nsteps)#
+plot(1~1,xlab="",ylab="",xlim=c(0,nsteps),ylim=c(0,400),col=0)#
+plot_dynamics(time_track1,3)#
+plot_dynamics(time_track2,2)#
+plot_dynamics(time_track3,1)#
+plot_dynamics(time_track4,4)#
+plot_dynamics(time_track5,5)#
+abline(h=0,col=2,lty=2)
+R
+growth <- growth_function_compare(paras,R)
+R=200
+growth <- growth_function_compare(paras,R)
+ls()
+?optim
+library(nleqslv)#
+#
+solve.analytical <- function(theta_seq,Dr_seq,R,r){##given r solve for N+g; r=1 is the special case for equilibrium where N+g=Ne#
+	if(length(theta_seq)==1){#
+		sol <- R/theta_seq[1]#
+	}#
+	r_seq <- c(r,rep(1,length(theta_seq)-length(r)))#
+	C <- get.C(theta_seq,Dr_seq,R,r_seq)#
+	sol <- analytical.sol(C,theta_seq,Dr_seq,r_seq)#
+	sol#
+}#
+#
+analytical.sol <- function(C,theta_seq,Dr_seq,r_seq){#
+	2/exp(1)*(C*theta_seq*r_seq^(0.5/theta_seq))^(1/(Dr_seq-1))#
+}#
+#
+get.C <- function(theta_seq,Dr_seq,R,r_seq){#
+	init.C <- 1/mean(theta_seq)#
+	C <- nleqslv(init.C,R_constraint,theta_seq=theta_seq,Dr_seq=Dr_seq,R=R,r_seq=r_seq)#
+	if(C[[3]]!=1&&C[[3]]!=2){#
+		print(C[[4]])#
+	}#
+	C[[1]]#
+}#
+#
+R_constraint <- function(C,theta_seq,Dr_seq,R,r_seq){#
+	R-sum(theta_seq*analytical.sol(C,theta_seq,Dr_seq,r_seq))#
+}#
+#
+steady.state.mR <- function(Sp_mat,R_mat,combine=T){#
+	SSN_mat <- matrix(ncol=dim(R_mat)[1],nrow=dim(Sp_mat)[1])#
+	for(i in 1:dim(R_mat)[1]){#
+		SSN_mat[,i] <- solve.analytical(Sp_mat[,1]/R_mat[i,2],Sp_mat[,2],R_mat[i,1],1)#
+	}#
+	rownames(SSN_mat) <- paste("Sp",1:dim(SSN_mat)[1])#
+	colnames(SSN_mat) <- paste("R",1:dim(SSN_mat)[2])#
+	if(combine){#
+		SSN_mat <- rowSums(SSN_mat)#
+	}#
+	SSN_mat#
+}
+solve.analytical(theta_seq,Dr_seq,R,r)
+theta_seq=c(0.1,0.1)
+Dr_seq=c(0.1,0.5)
+R=0.1
+r
+r=1
+solve.analytical(theta_seq,Dr_seq,R,r)
+R=1
+solve.analytical(theta_seq,Dr_seq,R,r)
+theta_seq=theta_seq/10
+solve.analytical(theta_seq,Dr_seq,R,r)
+R=0.1
+solve.analytical(theta_seq,Dr_seq,R,r)
+R=10
+theta_seq=theta_seq*100
+solve.analytical(theta_seq,Dr_seq,R,r)
+F=function(x,C,la){C*exp(-la*x)}
+F(10,1,1)
+F(10,1,1)/F(1,1,1)
+sum(F(1:10,1,1))
+sum(F(1:10,2,1))
+sum(F(1:10,2,2))
+F(10,2,2)/F(1,2,2)
+sum(F(1:10,2,1.5))
+F(10,2,1.5)/F(1,2,1.5)
+F(10,2,1)/F(1,2,2)
+F(10,2,1)+F(1,2,2)
+F(10,2,1)+F(1,2,1)
+F(10,1,1)+F(1,2,1)
+F(10,10,1)+F(1,2,1)
+rgeom(10,0.1)
+0.75/(1/6+1)
+0.85/0.75-1
+1/(0.85/0.75-1)
+3+2+3+4+3+3
+0.52/0.25
+log(0.5)
+log(0.5)+1
+0.75/(log(0.5)+1)
+x=10
+log(10)
+sqrt(10)
+10^0.8
+setwd("/Users/Jade/Documents/2015fall/Research/TrophLab2")
+getwd()
+?rgeom
+rgeom(0.5)
+rgeom(100.5)
+rgeom(10,0.5)
+rgeom(10,0.5)
+rgeom(10,0.1)
+rgeom(10,0.05)
+x=rgeom(10,0.05)
+order(x)
+sort(x)
+x
+source("Full_Web.R")
+nsp <- 30#
+tdistr <- "Uniform"#
+Dr <- 0.5#
+FW <- FW_full(nsp,tdistr,Dr)
+source("Full_Web.R")
+nsp <- 30#
+tdistr <- "Uniform"#
+Dr <- 0.5#
+FW <- FW_full(nsp,tdistr,Dr)
+pool.theta
+tdistr <- "uniform"
+FW <- FW_full(nsp,tdistr,Dr)
+source("MERA_SSN.R")
+solve.analytical
+FW <- FW_full(nsp,tdistr,Dr)
+community <- generate.pool(nsp,tdistr,Dr)
+community0 <- community#
+	equilibrium <- FALSE#
+	step <- 0
+source("Full_Web.R")
+FW <- FW_full(nsp,tdistr,Dr)
+tau_u <- 0.1
+FW <- FW_full(nsp,tdistr,Dr)
+judge_equi_full
+source("Full_Web.R")
+FW <- FW_full(nsp,tdistr,Dr)
+generate.pool
+source("Full_Web.R")
+FW <- FW_full(nsp,tdistr,Dr)
+FW

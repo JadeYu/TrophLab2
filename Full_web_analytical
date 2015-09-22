@@ -1,0 +1,88 @@
+\documentclass[12pt]{article}
+\usepackage{fullpage}
+\usepackage[margin=1in]{geometry}
+\usepackage[stable]{footmisc}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{IEEEtrantools}
+\usepackage{lineno}
+\usepackage{amsmath}
+\usepackage{epstopdf}
+\usepackage{parskip}
+\usepackage{authblk}
+\usepackage[authoryear]{natbib}
+%\setlength{\parskip}{20pt}
+\linespread{1.6}
+\date{}
+
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+
+%%	math short-cuts
+\def \ve{\varepsilon}	% epsilon used for metabolic rate
+\def \la{\lambda}	% lambda
+\newcommand{\eref}[1]{(\ref{#1})}
+
+%%	new commands for referencing figures and tables and sections
+\newcommand{\fref}[1]{Figure~\ref{#1}}	% inline figure ref
+\newcommand{\fpref}[1]{Fig.~\ref{#1}}	% parenthetical figure ref
+\newcommand{\tref}[1]{Table~\ref{#1}}	% table ref
+\newcommand{\sref}[1]{Section~\ref{#1}}	% table ref
+%\linenumbers
+
+\title{\Large \textbf{Analytically solving trophic links for a fully connected food web}}
+
+\author{Jade, Sep 21}
+
+\begin{document}
+\maketitle
+\raggedright
+\large
+\setlength{\parindent}{15pt}
+Assuming all species are connected to one another in a fully connected food web, the steady state abundances of all species can be analytically expressed, from which the amount of resource transferred between any two species, i.e. the width of any trophic link, can be numerically determined without any simulation procedure. Specifically when all species share the same relative individual distinguishability $D_r$, each link can be analytically solved as a simple function of the product of resource requirements ($\theta$) of the two species connected by the link. Promises and problems are discussed at the end.
+
+\section{Expressing the steady state abundances in a fully connected web}
+First let's recall the steady state abundance expression when there is only one resource :
+ \begin{equation}
+ \begin{split}
+ N_i = {C \theta_i}^{\frac{1}{D_{r,i}-1}}
+\end{split}
+\end{equation}
+Therefore the steady state resource content $R_i$ can be expressed as
+ \begin{equation}
+ \begin{split}
+ R_i = \theta_i \times N_i = C^{\frac{1}{D_{r,i}-1}} \times {\theta_i}^{\frac{D_{r,i}}{D_{r,i}-1}}
+\end{split}
+\end{equation}
+Given this, the amount of resource transferred from species $i$ to species $j$ (which is defined as $R_{ij}$) can be expressed as
+ \begin{equation}
+ \begin{split}
+ R_{ij} = C_i^{\frac{1}{D_{r,j}-1}} \times {\theta_j}^{\frac{D_{r,j}}{D_{r,j}-1}}
+\end{split}
+\end{equation}
+Where $C_i$ is a constant for species $i$ determined by its resource content (given $R_i$, $C_i$ can be solved by $\sum R_{ij} = R_i$).
+
+When each of the species can prey on all species (including itself) as well as be preyed on by all species, its steady state resource content can be expressed in two ways, 1) as the sum of resources obtained from all species and 2) as the sum of resources given to all species. Of course the trophic efficiency has to be considered in these expressions.  These two relationships put into equations is as follows:
+
+ \begin{equation}
+ \begin{split}
+ R_i = \tau_u \times \sum_j^{S_0} R_{ji} =  \tau_u \sum_j^{S_0} C_j^{\frac{1}{D_{r,i}-1}} {\theta_i}^{\frac{D_{r,i}}{D_{r,i}-1}}\hskip 1in \mbox{(flows in)}\\
+ = \sum_j^{S_0} R_{ij} = \sum_j^{S_0} C_i^{\frac{1}{D_{r,j}-1}} {\theta_j}^{\frac{D_{r,j}}{D_{r,j}-1}}\hskip 1in \mbox{(flows out)}
+\end{split}
+\end{equation}
+$\tau_u$ is the trophic efficiency quantifying the proportion of flow-in resources transferred into biomass of the species. The prey distinguishability does not affect steady state abundance of the predator (for derivations see Write-up ).
+
+Also please notice that in Eq. 4 I have assumed that all resource of the species can be given out to its predators while previously I have assumed the maximal predation ratio to be 0.5 (in other words, $\sum_j^{S_0} R_{ij} = R_i /2 $). This assumption is modified because 1) previously this 0.5 maximal predation ratio was imposed so that a species can recover within one generation time to its pre-predation steady state abundance. This was based on the implicit assumption that all species have the same generation time, which is apparently not realistic. In other words, removing the 0.5 maximal predation ratio recognizes the possibility of a species being pushed below half of its pre-predation steady abundance, but it can take time ($>1$ generation time) to recover its abundance since the predator can have a longer generation time. An alternative justification for this is that the intrinsic growth rates for all species are assumed to be much higher than what can be realized in this model that all species can recover to its steady state abundance before predation happens again. But of course predation cannot completely wipe out a species, which means the maximal predation ratio should always be smaller than 1. But in Eq. 4 this effect can be fully captured by the value of $\tau_u$ (e.g. when maximal predation ratio is 0.5 and $\tau_u=0.1$ as previously assumed, it is equivalent to $\tau_u=0.05$ in Eq. 4). 
+
+Applying Eq. 4 to all species (make $i$ be any value from 1 to $S_0$), we get $S_0$ equations with $S_0$ unknown values ($C_i$ for $i$ = 1, 2,... $S_0$).
+
+ \begin{equation}
+ \begin{split}
+ \mbox{for all $i$ in 1 - $S_0$:} \hskip 1 cm \tau_u \sum_j^{S_0} C_j^{\frac{1}{D_{r,i}-1}} {\theta_i}^{\frac{D_{r,i}}{D_{r,i}-1}} = \sum_j^{S_0} C_i^{\frac{1}{D_{r,j}-1}} {\theta_j}^{\frac{D_{r,j}}{D_{r,j}-1}}
+\end{split}
+\end{equation}
+
+Please notice that these $S_0$ equations are not totally independent 
+
+
+\end{document}

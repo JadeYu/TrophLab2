@@ -200,13 +200,24 @@ pool.theta <- function(nsp,mu,distr){
 	theta_seq
 }
 
-generate.pool <- function(nsp,tdistr,Dr,gamma){
+generate.pool <- function(nsp,tdistr,Dr,gamma,init="MERA"){
 	sp_pool <- matrix(nrow=nsp,ncol=7)
 	sp_pool[,1] <- 1:nsp
 	sp_pool[,2] <- pool.theta(nsp,1,tdistr)
 	sp_pool[,3] <- rep(Dr,nsp)
 	sp_pool[,4] <- rep(gamma,nsp)
-	sp_pool[,5] <- solve.analytical(sp_pool[,2],sp_pool[,3],100,1)
+	if(init=="MERA"){
+		sp_pool[,5] <- solve.analytical(sp_pool[,2],sp_pool[,3],100,1)
+	}else if(init=="uniform"){
+		sp_pool[,5] <- runif(nsp,1,100)
+	}else if(init=="poisson"){
+		sp_pool[,5] <- rpois(nsp,50)
+	}else if(init=="geometric"){
+		sp_pool[,5] <- rgeom(nsp,0.05)+1
+	}else{
+		print("no such initial state defined")
+		return()
+	}
 	sp_pool[,6] <- rep(0,nsp)
 	sp_pool[,7] <- 1
 	#sp_pool <- sp_pool[order(sp_pool[,5]),]##order competitiveness (from lowest to highest)
