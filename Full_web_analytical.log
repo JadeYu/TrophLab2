@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  22 SEP 2015 10:38
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  24 SEP 2015 13:04
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -342,11 +342,11 @@ LaTeX Font Info:    ... okay on input line 37.
 \makeMPintoPDFobject=\count126
 \everyMPtoPDFconversion=\toks26
 )
-LaTeX Font Info:    Try loading font information for U+msa on input line 42.
+LaTeX Font Info:    Try loading font information for U+msa on input line 44.
  (/usr/local/texlive/2014/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 42.
+LaTeX Font Info:    Try loading font information for U+msb on input line 44.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -354,13 +354,20 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 {/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
  [4]
+<Latest_graphs/Rdistr_Dr05.pdf, id=25, 289.08pt x 289.08pt>
+File: Latest_graphs/Rdistr_Dr05.pdf Graphic file (type pdf)
+
+<use Latest_graphs/Rdistr_Dr05.pdf>
+Package pdftex.def Info: Latest_graphs/Rdistr_Dr05.pdf used on input line 106.
+(pdftex.def)             Requested size: 289.07928pt x 289.07928pt.
+ [5] [6 <./Latest_graphs/Rdistr_Dr05.pdf>]
 (./Full_web_analytical.aux) ) 
 Here is how much of TeX's memory you used:
- 3935 strings out of 493117
- 55575 string characters out of 6135433
+ 3952 strings out of 493117
+ 55909 string characters out of 6135433
  125894 words of memory out of 5000000
- 7344 multiletter control sequences out of 15000+600000
- 7442 words of font info for 29 fonts, out of 8000000 for 9000
+ 7359 multiletter control sequences out of 15000+600000
+ 10243 words of font info for 40 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  42i,17n,32p,1447b,183s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2014/texmf-dist/fonts/type1/pu
@@ -374,10 +381,10 @@ fonts/cm/cmr12.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfo
 nts/cm/cmr7.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts
 /cm/cmsy10.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/
 cm/cmsy7.pfb>
-Output written on Full_web_analytical.pdf (4 pages, 98625 bytes).
+Output written on Full_web_analytical.pdf (6 pages, 197986 bytes).
 PDF statistics:
- 57 PDF objects out of 1000 (max. 8388607)
- 40 compressed objects within 1 object stream
+ 128 PDF objects out of 1000 (max. 8388607)
+ 94 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 6 words of extra memory for PDF output out of 10000 (max. 10000000)
 
