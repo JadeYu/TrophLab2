@@ -14,14 +14,32 @@ plot_Rdistr <- function(R_seq,R_comp){
 	legend("bottomright",c("with interaction","without interaction"),pch=16,col=1:2)
 }
 
-Trim_web <- function(link_mat,L){
-	threshold <- sort(as.numeric(link_mat),decreasing=T)[L]
+Trim_web <- function(link_mat,threshold,ctype="links"){
+	if(ctype=="links"){
+		threshold <- sort(as.numeric(link_mat),decreasing=T)[threshold]
+	}else if(ctype=="MVFF"){
+		threshold <- sum(as.numeric(link_mat))*threshold
+	}else{
+		print("constraint type invalid")
+		return()
+	}
 	link_mat[link_mat<threshold]<- 0 
 	link_mat
 }
 
+is.basal <- function(sps,link_mat){
+	diag(link_mat) = 0
+	colSums(link_mat[,sps])==0&rowSums(link_mat[sps,])!=0
+}
+
+is.top <- function(sps,link_mat){
+	diag(link_mat) = 0 ##excluding cannibals
+	colSums(link_mat[,sps])!=0&rowSums(link_mat[sps,])==0
+}
+
 get_basals <- function(link_mat){
 	indice <- 1:dim(link_mat)[1]
+	diag(link_mat) = 0
 	indice[colSums(link_mat)==0&rowSums(link_mat)!=0]
 }
 

@@ -1,522 +1,3 @@
-C_seq=C_init
-EQS <- numeric(length(C_seq))
-EQS[1] <- R0 - out_flows(C_seq[1],Dr_seq,theta_seq)
-EQS[1]
-for(i in 2:length(C_seq)){#
-			EQS[i] <- in_flows(C_seq,Dr_seq[i],theta_seq[i],tau_u) - out_flows(C_seq[i],Dr_seq,theta_seq)#
-	}#
-	EQS
-i
-in_flows(C_seq,Dr_seq[i],theta_seq[i],tau_u)
-out_flows(C_seq[i],Dr_seq,theta_seq)
-Dr_seq[i]
-R_eqs <- function(C_seq,theta_seq,Dr_seq,R0,tau_u){#
-	EQS <- numeric(length(C_seq))#
-	EQS[1] <- R0 - out_flows(C_seq[1],Dr_seq,theta_seq)#for fundamental resource#
-	for(i in 2:length(C_seq)){#
-			EQS[i] <- in_flows(C_seq,Dr_seq[i-1],theta_seq[i-1],tau_u) - out_flows(C_seq[i],Dr_seq,theta_seq)#
-	}#
-	EQS#
-}
-C.sol <- nleqslv(C_init,R_eqs,theta_seq=theta_seq,Dr_seq=Dr_seq,R0=R0,tau_u = tau_u)
-C.sol
-C_seq <- C.sol[[1]]
-link_mat <- matrix(nrow=length(C_seq),ncol=length(C_seq))
-for(i in 1:length(C_seq)){#
-		for(j in 1:length(C_seq)){#
-			link_mat[i,j] <- Ri2j(C_seq[i],Dr_seq[j],theta_seq[j])#
-		}#
-	}#
-	R_seq <- rowSums(link_mat)
-link_mat
-link_mat <- matrix(nrow=length(C_seq),ncol=length(C_seq)-1)#
-	for(i in 1:length(C_seq)){#
-		for(j in 1:(length(C_seq)-1)){#
-			link_mat[i,j] <- Ri2j(C_seq[i],Dr_seq[j],theta_seq[j])#
-		}#
-	}
-link_mat
-R_seq <- rowSums(link_mat)
-R_seq
-theta_seq <- c(1,3)
-MERA_R <- theta_seq^(Dr_seq/(1-Dr_seq)) ##
-	C0 <- (R0*tau_u/sum(MERA_R))^(mean(Dr_seq)-1)#
-	R_seq <- R0*tau_u*MERA_R/sum(MERA_R)#
-	C_init <- c(C0,(R_seq/sum(MERA_R))^(mean(Dr_seq)-1))#
-	C.sol <- nleqslv(C_init,R_eqs,theta_seq=theta_seq,Dr_seq=Dr_seq,R0=R0,tau_u = tau_u)
-C.sol
-C_seq <- C.sol[[1]]#
-	link_mat <- matrix(nrow=length(C_seq),ncol=length(C_seq)-1)#
-	for(i in 1:length(C_seq)){#
-		for(j in 1:(length(C_seq)-1)){#
-			link_mat[i,j] <- Ri2j(C_seq[i],Dr_seq[j],theta_seq[j])#
-		}#
-	}#
-	R_seq <- rowSums(link_mat)
-R_seq
-link_mat
-Dr_seq <- rep(0.5,10)
-theta_seq <- runif(10,1,3)
-MERA_R <- theta_seq^(Dr_seq/(1-Dr_seq)) ##
-	C0 <- (R0*tau_u/sum(MERA_R))^(mean(Dr_seq)-1)#
-	R_seq <- R0*tau_u*MERA_R/sum(MERA_R)#
-	C_init <- c(C0,(R_seq/sum(MERA_R))^(mean(Dr_seq)-1))#
-	C.sol <- nleqslv(C_init,R_eqs,theta_seq=theta_seq,Dr_seq=Dr_seq,R0=R0,tau_u = tau_u)
-C.sol
-C_seq <- C.sol[[1]]#
-	link_mat <- matrix(nrow=length(C_seq),ncol=length(C_seq)-1)#
-	for(i in 1:length(C_seq)){#
-		for(j in 1:(length(C_seq)-1)){#
-			link_mat[i,j] <- Ri2j(C_seq[i],Dr_seq[j],theta_seq[j])#
-		}#
-	}#
-	R_seq <- rowSums(link_mat)
-R_seq
-link_mat
-Dr_seq <- rnorm(10,0.5,0.5)
-Dr_seq
-Dr_seq <- rnorm(10,0.5,0.3)
-Dr_seq
-Dr_seq <- runif(10,0,0.8)
-Dr_seq
-MERA_R <- theta_seq^(Dr_seq/(1-Dr_seq)) ##
-	C0 <- (R0*tau_u/sum(MERA_R))^(mean(Dr_seq)-1)#
-	R_seq <- R0*tau_u*MERA_R/sum(MERA_R)#
-	C_init <- c(C0,(R_seq/sum(MERA_R))^(mean(Dr_seq)-1))#
-	C.sol <- nleqslv(C_init,R_eqs,theta_seq=theta_seq,Dr_seq=Dr_seq,R0=R0,tau_u = tau_u)
-C.sol
-C_seq <- C.sol[[1]]#
-	link_mat <- matrix(nrow=length(C_seq),ncol=length(C_seq)-1)#
-	for(i in 1:length(C_seq)){#
-		for(j in 1:(length(C_seq)-1)){#
-			link_mat[i,j] <- Ri2j(C_seq[i],Dr_seq[j],theta_seq[j])#
-		}#
-	}#
-	R_seq <- rowSums(link_mat)
-link_mat
-R_seq
-theta_seq <- 2*Dr_seq
-MERA_R <- theta_seq^(Dr_seq/(1-Dr_seq)) ##
-	C0 <- (R0*tau_u/sum(MERA_R))^(mean(Dr_seq)-1)#
-	R_seq <- R0*tau_u*MERA_R/sum(MERA_R)#
-	C_init <- c(C0,(R_seq/sum(MERA_R))^(mean(Dr_seq)-1))#
-	C.sol <- nleqslv(C_init,R_eqs,theta_seq=theta_seq,Dr_seq=Dr_seq,R0=R0,tau_u = tau_u)
-print(C.sol[[4]])
-C_seq <- C.sol[[1]]#
-	link_mat <- matrix(nrow=length(C_seq),ncol=length(C_seq)-1)#
-	for(i in 1:length(C_seq)){#
-		for(j in 1:(length(C_seq)-1)){#
-			link_mat[i,j] <- Ri2j(C_seq[i],Dr_seq[j],theta_seq[j])#
-		}#
-	}#
-	R_seq <- rowSums(link_mat)#
-	#compare with colSums(link_mat)*tau_u#
-	list(link_mat=link_mat,R_seq=R_seq)
-theta_seq <- 1/Dr_seq
-MERA_R <- theta_seq^(Dr_seq/(1-Dr_seq)) ##
-	C0 <- (R0*tau_u/sum(MERA_R))^(mean(Dr_seq)-1)#
-	R_seq <- R0*tau_u*MERA_R/sum(MERA_R)#
-	C_init <- c(C0,(R_seq/sum(MERA_R))^(mean(Dr_seq)-1))#
-	C.sol <- nleqslv(C_init,R_eqs,theta_seq=theta_seq,Dr_seq=Dr_seq,R0=R0,tau_u = tau_u)
-print(C.sol[[4]])
-C_seq <- C.sol[[1]]#
-	link_mat <- matrix(nrow=length(C_seq),ncol=length(C_seq)-1)#
-	for(i in 1:length(C_seq)){#
-		for(j in 1:(length(C_seq)-1)){#
-			link_mat[i,j] <- Ri2j(C_seq[i],Dr_seq[j],theta_seq[j])#
-		}#
-	}#
-	R_seq <- rowSums(link_mat)#
-	#compare with colSums(link_mat)*tau_u#
-	list(link_mat=link_mat,R_seq=R_seq)
-Dr_seq
-sum(link_mat[1.])
-sum(link_mat[1,])
-getwd()
-source("MERA_SSN.R")
-ls()
-solve.analytica
-solve.analytical
-no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)
-library(nleqslv)#
-#
-Ri2j <- function(C_i,Dr_j,theta_j){#
-#
-	D <- 1/(Dr_j-1)#
-#
-	(C_i*theta_j)^D * theta_j#
-#
-}#
-in_flows <- function(C_seq,Dr_i,theta_i,tau_u){#
-#
-	flows <- numeric(length(C_seq))#
-#
-	for(s in 1:length(C_seq)){#
-#
-		flows[s] <- Ri2j(C_seq[s],Dr_i,theta_i)*tau_u#
-#
-	}#
-#
-	sum(flows)#
-#
-}#
-out_flows <- function(C_i,Dr_seq,theta_seq){#
-#
-	flows <- numeric(length(Dr_seq))#
-#
-	for(s in 1:length(Dr_seq)){#
-#
-		flows[s] <- Ri2j(C_i,Dr_seq[s],theta_seq[s])#
-#
-	}#
-#
-	sum(flows)#
-#
-}#
-R_eqs <- function(C_seq,theta_seq,Dr_seq,R0,tau_u){#
-#
-	EQS <- numeric(length(C_seq))#
-#
-	EQS[1] <- R0 - out_flows(C_seq[1],Dr_seq,theta_seq)#for fundamental resource#
-#
-	for(i in 2:length(C_seq)){#
-#
-			EQS[i] <- in_flows(C_seq,Dr_seq[i-1],theta_seq[i-1],tau_u) - out_flows(C_seq[i],Dr_seq,theta_seq)#
-#
-	}#
-#
-	EQS#
-#
-}#
-solve_full_web <- function(theta_seq,Dr_seq,R0,tau_u){#
-#
-	MERA_R <- theta_seq^(Dr_seq/(1-Dr_seq)) ##
-#
-	C0 <- (R0*tau_u/sum(MERA_R))^(mean(Dr_seq)-1)#
-#
-	R_seq <- R0*tau_u*MERA_R/sum(MERA_R)#
-#
-	C_init <- c(C0,(R_seq/sum(MERA_R))^(mean(Dr_seq)-1))#
-#
-	C.sol <- nleqslv(C_init,R_eqs,theta_seq=theta_seq,Dr_seq=Dr_seq,R0=R0,tau_u = tau_u)#
-#
-	if(C.sol[[3]]!=1){#
-#
-		print(C.sol[[4]])#
-#
-	}#
-#
-	C_seq <- C.sol[[1]]#
-#
-	link_mat <- matrix(nrow=length(C_seq),ncol=length(C_seq)-1)#
-#
-	for(i in 1:length(C_seq)){#
-#
-		for(j in 1:(length(C_seq)-1)){#
-#
-			link_mat[i,j] <- Ri2j(C_seq[i],Dr_seq[j],theta_seq[j])#
-#
-		}#
-#
-	}#
-#
-	R_seq <- rowSums(link_mat)#
-#
-	#compare with colSums(link_mat)*tau_u#
-#
-	list(link_mat=link_mat,R_seq=R_seq)#
-#
-}
-source("MERA_SSN.R")#
-source("anal_fullweb_withR.R")
-Dr_seq <- runif(30,0,0.8)#
-#
-theta_seq <- 1/Dr_seq#
-#
-R0 <- 100#
-#
-tau_u <- 0.1#
-#
-FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
-no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)
-no_inter
-R_inter <- FFW$R_seq
-R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq
-R_inter
-R_inter <- FFW$R_seq[-1]
-R_inter
-sum(R_inter)
-R_no_inter
-sum(R_no_inter)
-x=runif(10,0,1)
-x
-rank(x)
-x[1] = x[2]
-x
-rank(x)
-rank_R <- function(R_seq){#
-	R_seq <- R_seq/sum(R_seq)#
-	cdf <- rank(R_seq)/length(R_seq)#
-	plot(cdf~R_seq,ylab="relative rank",xlab="resource proportion (in R0)")#
-}
-rank_R <- function(R_seq){#
-	pR <- R_seq/sum(R_seq)#
-	cdf <- rank(R_seq)/length(R_seq)#
-	list(cdf=cdf,R_seq=pR)#
-}#
-#
-plot_Rdistr <- function(R_seq,R_comp=NA){#
-	rr <- rank_R(R_seq)#
-	plot(rr$cdf~rr$pR,type="l",ylab="relative rank",xlab="resource proportion (in R0)")#
-	if(R_comp!= NA){#
-		rrc <- rank_R(R_comp)#
-		lines(rrc$pR,rrc$cdf,col=2)#
-		legend("bottomright",c("with interaction","without interaction"),lty=1,col=1:2)#
-	}#
-}
-plot_Rdistr <- function(R_inter,R_no_inter)
-plot_Rdistr(R_inter,R_no_inter)
-rank_R <- function(R_seq){#
-	pR <- R_seq/sum(R_seq)#
-	cdf <- rank(R_seq)/length(R_seq)#
-	list(cdf=cdf,pR=pR)#
-}
-plot_Rdistr(R_inter,R_no_inter)
-R_no_inter
-rank_R <- function(R_seq){#
-	R_seq <- sort(R_seq)#
-	pR <- R_seq/sum(R_seq)#
-	cdf <- rank(R_seq)/length(R_seq)#
-	list(cdf=cdf,pR=pR)#
-}#
-#
-plot_Rdistr <- function(R_seq,R_comp=NA){#
-	rr <- rank_R(R_seq)#
-	plot(rr$cdf~rr$pR,ylab="relative rank",xlab="resource proportion (in R0)")#
-	if(sum(R_comp)!= NA){#
-		rrc <- rank_R(R_comp)#
-		points(rrc$pR,rrc$cdf,col=2)#
-		legend("bottomright",c("with interaction","without interaction"),pch=1,col=1:2)#
-	}#
-}
-plot_Rdistr(R_inter,R_no_inter)
-plot_Rdistr <- function(R_seq,R_comp=NA){#
-	rr <- rank_R(R_seq)#
-	plot(rr$cdf~rr$pR,ylab="relative rank",xlab="resource proportion (in R0)")#
-	if(!is.na(sum(R_comp))){#
-		rrc <- rank_R(R_comp)#
-		points(rrc$pR,rrc$cdf,col=2)#
-		legend("bottomright",c("with interaction","without interaction"),pch=1,col=1:2)#
-	}#
-}
-plot_Rdistr(R_inter,R_no_inter)
-rank_R <- function(R_seq){#
-	R_seq <- sort(R_seq)#
-	pR <- R_seq/sum(R_seq)#
-	cdf <- rank(R_seq)/length(R_seq)#
-	list(cdf=cdf,pR=pR)#
-}#
-#
-plot_Rdistr <- function(R_seq,R_comp=NA){#
-	rr <- rank_R(R_seq)#
-	plot(rr$cdf~rr$pR,ylab="relative rank",xlab="resource proportion (in R0)",xlim=c(0,max(rr$pR)),pch=16)#
-	if(!is.na(sum(R_comp))){#
-		rrc <- rank_R(R_comp)#
-		points(rrc$pR,rrc$cdf,col=2,pch=16)#
-		legend("bottomright",c("with interaction","without interaction"),pch=16,col=1:2)#
-	}#
-}
-plot_Rdistr(R_inter,R_no_inter)
-rank_R <- function(R_seq){#
-	R_seq <- sort(R_seq)#
-	pR <- R_seq/sum(R_seq)#
-	cdf <- rank(R_seq)/length(R_seq)#
-	list(cdf=cdf,pR=pR)#
-}#
-#
-plot_Rdistr <- function(R_seq,R_comp){#
-	rr <- rank_R(R_seq)#
-	rrc <- rank_R(R_comp)#
-	pRrange <- range(c(rr$pR,rrc$pR))#
-	plot(rr$cdf~rr$pR,ylab="relative rank",xlab="resource proportion (in R0)",xlim=pRrange,pch=16)#
-	points(rrc$pR,rrc$cdf,col=2,pch=16)#
-	legend("bottomright",c("with interaction","without interaction"),pch=16,col=1:2)#
-}
-plot_Rdistr(R_inter,R_no_inter)
-Dr_seq <- runif(30,0,0.8)#
-#
-theta_seq <- 1*Dr_seq#
-#
-R0 <- 100#
-#
-tau_u <- 0.1#
-#
-FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)#
-R_inter <- FFW$R_seq[-1]#
-#
-R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
-#
-plot_Rdistr(R_inter,R_no_inter)
-Dr_seq <- runif(30,0,0.8)#
-#
-theta_seq <- runif(30,0,1)#
-theta_seq <- 1*Dr_seq#
-#
-R0 <- 100#
-#
-tau_u <- 0.1#
-#
-FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)#
-R_inter <- FFW$R_seq[-1]#
-#
-R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
-#
-plot_Rdistr(R_inter,R_no_inter)
-Dr_seq <- runif(30,0,0.8)#
-#
-theta_seq <- runif(30,0,1)#
-theta_seq <- 1*Dr_seq#
-#
-R0 <- 100#
-#
-tau_u <- 0.1#
-#
-FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)#
-R_inter <- FFW$R_seq[-1]#
-#
-R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
-#
-plot_Rdistr(R_inter,R_no_inter)
-Dr_seq <- runif(50,0,0.8)#
-#
-theta_seq <- runif(50,0,1)#
-theta_seq <- 1*Dr_seq#
-#
-R0 <- 100#
-#
-tau_u <- 0.1#
-#
-FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)#
-R_inter <- FFW$R_seq[-1]#
-#
-R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
-#
-plot_Rdistr(R_inter,R_no_inter)
-theta_seq <- 1*Dr_seq
-R0 <- 100#
-#
-tau_u <- 0.1#
-#
-FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)#
-R_inter <- FFW$R_seq[-1]#
-#
-R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
-#
-plot_Rdistr(R_inter,R_no_inter)
-theta_seq <- 1/Dr_seq
-FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)#
-R_inter <- FFW$R_seq[-1]#
-#
-R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
-#
-plot_Rdistr(R_inter,R_no_inter)
-theta_seq <- runif(50,0,1)
-FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)#
-R_inter <- FFW$R_seq[-1]#
-#
-R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
-#
-plot_Rdistr(R_inter,R_no_inter)
-FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)#
-R_inter <- FFW$R_seq[-1]#
-#
-R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
-#
-plot_Rdistr(R_inter,R_no_inter)
-theta_seq <- runif(50,0,1)
-FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)#
-R_inter <- FFW$R_seq[-1]#
-#
-R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
-#
-plot_Rdistr(R_inter,R_no_inter)
-theta_seq <- runif(50,0,1)
-FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)#
-R_inter <- FFW$R_seq[-1]#
-#
-R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
-#
-plot_Rdistr(R_inter,R_no_inter)
-theta_seq <- runif(50,0,1)
-FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)#
-R_inter <- FFW$R_seq[-1]#
-#
-R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
-#
-plot_Rdistr(R_inter,R_no_inter)
-theta_seq <- runif(50,0,2)
-FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
-theta_seq <- runif(50,0,1)
-FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
-R_inter <- FFW$R_seq[-1]#
-#
-R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
-#
-plot_Rdistr(R_inter,R_no_inter)
-Dr_seq <- runif(30,0,0.8)#
-#
-theta_seq <- runif(30,0,1)
-FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)#
-R_inter <- FFW$R_seq[-1]#
-#
-R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
-#
-plot_Rdistr(R_inter,R_no_inter)
-Dr_seq <- runif(50,0,0.8)#
-#
-theta_seq <- runif(50,0,1)
-FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
-theta_seq <- runif(50,0,1)
-FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
-R_inter <- FFW$R_seq[-1]#
-#
-R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
-#
-plot_Rdistr(R_inter,R_no_inter)
-tau_u
-tau_u <- 0.01
-FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
-Dr_seq <- runif(50,0.5,0.5)#
-#
-theta_seq <- runif(50,0,1)
-Dr_seq
-tau_u <- 0.1
-FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
-theta_seq <- runif(50,0,1)
-FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
-Dr_seq <- runif(30,0.5,0.5)#
-#
-theta_seq <- runif(30,0,1)
-FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
-R_inter <- FFW$R_seq[-1]#
-#
-R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
-#
-plot_Rdistr(R_inter,R_no_inter)
-Dr_seq <- runif(30,0.8,0.8)
-FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)#
-R_inter <- FFW$R_seq[-1]#
-#
-R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
-#
-plot_Rdistr(R_inter,R_no_inter)
-Dr_seq <- runif(30,0.1,0.1)
-FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)#
-R_inter <- FFW$R_seq[-1]#
-#
-R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
-#
-plot_Rdistr(R_inter,R_no_inter)
 Dr_seq <- runif(30,0.1,0.1)#
 #
 theta_seq <- runif(30,0,1)#
@@ -849,3 +330,321 @@ Chain_length(chains,loop=T)#
 loops(chains)#
 #
 num_cann(trimmed_mat)
+?quantile
+X=rnorm(100)
+quantile(X,0.1)
+quantile(X,0.9)
+loops
+source("MERA_SSN.R")#
+source("fullweb_withR.R")#
+source("analyze_fullweb.R")#
+source("Visualization.R")
+nsp <- 30#
+mu <- 10#
+theta_seq <- rgeom(nsp,1/(mu+1))+1#
+Dr_seq <- rnorm(nsp,0.5,0.1)#
+Dr_seq <- theta_seq^0.5/max(theta_seq^0.5)*0.5+0.2
+R0 <- mu*nsp#
+tau_u <- 0.1#
+#
+FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
+theta_seq
+Dr_seq
+R_inter <- FFW$R_seq#
+#
+R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
+#
+plot_Rdistr(R_inter,R_no_inter)
+connectance <- 0.3
+trimmed_mat <- Trim_web(FFW$link_mat,connectance*nsp^2,"links")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=F)
+R_inter
+source("MERA_SSN.R")#
+source("fullweb_withR.R")#
+source("analyze_fullweb.R")#
+source("Visualization.R")
+nsp <- 30#
+mu <- 1#
+theta_seq <- rgeom(nsp,1/(mu+1))+1#
+Dr_seq <- rnorm(nsp,0.5,0.1)#
+Dr_seq <- theta_seq^0.5/max(theta_seq^0.5)*0.5+0.2#
+#
+R0 <- mu*nsp#
+tau_u <- 0.1#
+#
+FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
+R_inter <- FFW$R_seq#
+R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
+plot_Rdistr(R_inter,R_no_inter)
+nsp <- 30#
+mu <- 5#
+theta_seq <- rgeom(nsp,1/(mu+1))+1#
+Dr_seq <- rnorm(nsp,0.5,0.1)#
+Dr_seq <- theta_seq^0.5/max(theta_seq^0.5)*0.5+0.2#
+#
+R0 <- mu*nsp#
+tau_u <- 0.1#
+#
+FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
+R_inter <- FFW$R_seq#
+R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
+plot_Rdistr(R_inter,R_no_inter)
+nsp <- 30#
+mu <- 10#
+theta_seq <- rgeom(nsp,1/(mu+1))+1#
+Dr_seq <- rnorm(nsp,0.5,0.1)#
+Dr_seq <- theta_seq^0.5/max(theta_seq^0.5)*0.5+0.2#
+#
+R0 <- mu*nsp#
+tau_u <- 0.1#
+#
+FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
+nsp <- 30#
+mu <- 10#
+theta_seq <- rgeom(nsp,1/(mu+1))+1#
+Dr_seq <- rnorm(nsp,0.5,0.1)#
+Dr_seq <- theta_seq^0.5/max(theta_seq^0.5)*0.5+0.2#
+#
+R0 <- mu*nsp#
+tau_u <- 0.1#
+#
+FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
+R_inter <- FFW$R_seq#
+R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
+plot_Rdistr(R_inter,R_no_inter)
+connectance <- 0.3#
+#
+trimmed_mat <- Trim_web(FFW$link_mat,connectance*nsp^2,"links")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=F)
+connectance <- 0.1
+trimmed_mat <- Trim_web(FFW$link_mat,connectance*nsp^2,"links")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=F)
+nsp <- 30#
+mu <- 10#
+theta_seq <- runif(nsp,1,2*mu-1)#
+Dr_seq <- rnorm(nsp,0.5,0.1)
+R0 <- mu*nsp#
+tau_u <- 0.1#
+#
+FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
+R_inter <- FFW$R_seq#
+R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
+plot_Rdistr(R_inter,R_no_inter)
+connectance <- 0.1#
+#
+trimmed_mat <- Trim_web(FFW$link_mat,connectance*nsp^2,"links")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=F)
+link_mat=trimmed_mat
+index <- 1:dim(link_mat)[1]
+as.numeric(!is.basal(index,link_mat))+as.numeric(is.top(index,link_mat))+1
+index
+is.basal(index,link_mat)
+source("analyze_fullweb.R")
+is.basal(index,link_mat)
+as.numeric(!is.basal(index,link_mat))+as.numeric(is.top(index,link_mat))+1
+metrics <- web_summary(trimmed_mat,R_inter,verbose=F)
+source("Visualization.R")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=F)
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+source("Visualization.R")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+source("Visualization.R")
+nsp <- 30#
+mu <- 10#
+theta_seq <- runif(nsp,1,2*mu-1)#
+Dr_seq <- rnorm(nsp,0.5,0.1)+(theta_seq-mu)/4/mu#
+#Dr_seq <- theta_seq^0.5/max(theta_seq^0.5)*0.5+0.2#
+#
+R0 <- mu*nsp#
+tau_u <- 0.1#
+#
+FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
+Dr_seq
+nsp <- 30#
+mu <- 10#
+theta_seq <- runif(nsp,1,2*mu-1)#
+Dr_seq <- rnorm(nsp,0.5,0.1)+(theta_seq-mu)/4/mu#
+#Dr_seq <- theta_seq^0.5/max(theta_seq^0.5)*0.5+0.2#
+#
+R0 <- mu*nsp#
+tau_u <- 0.1#
+#
+FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
+theta_seq
+Dr_seq <- rnorm(nsp,0.5,0.1)+0*(theta_seq-mu)/4/mu
+FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
+R_inter <- FFW$R_seq#
+R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
+plot_Rdistr(R_inter,R_no_inter)
+sum(R_inter)
+R0
+sum(R_no_inter)
+Dr_seq
+Dr_seq <- rnorm(nsp,0.5,0.1)+0.5*(theta_seq-mu)/4/mu
+Dr_seq
+FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
+plot(Dr_seq,theta_seq)
+R_inter <- FFW$R_seq#
+R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
+plot_Rdistr(R_inter,R_no_inter)
+Dr_seq <- rnorm(nsp,0.5,0.1)+1*(theta_seq-mu)/4/mu
+FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
+R_inter <- FFW$R_seq#
+R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
+plot_Rdistr(R_inter,R_no_inter)
+connectance <- 0.1#
+#
+trimmed_mat <- Trim_web(FFW$link_mat,connectance*nsp^2,"links")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+nsp <- 30#
+mu <- 10#
+theta_seq <- runif(nsp,1,2*mu-1)#
+Dr_seq <- rnorm(nsp,0.7,0.1)+0*(theta_seq-mu)/4/mu#
+#Dr_seq <- theta_seq^0.5/max(theta_seq^0.5)*0.5+0.2#
+#
+R0 <- mu*nsp#
+tau_u <- 0.1#
+#
+FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)#
+#
+##compare resource distribution#
+R_inter <- FFW$R_seq#
+R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
+plot_Rdistr(R_inter,R_no_inter)
+nsp <- 30#
+mu <- 10#
+theta_seq <- runif(nsp,1,2*mu-1)#
+Dr_seq <- rnorm(nsp,0.7,0.1)+0*(theta_seq-mu)/4/mu#
+#Dr_seq <- theta_seq^0.5/max(theta_seq^0.5)*0.5+0.2#
+#
+R0 <- mu*nsp#
+tau_u <- 0.1#
+#
+FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)#
+#
+##compare resource distribution#
+R_inter <- FFW$R_seq#
+R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
+plot_Rdistr(R_inter,R_no_inter)
+nsp <- 30#
+mu <- 10#
+theta_seq <- runif(nsp,1,2*mu-1)#
+Dr_seq <- rnorm(nsp,0.5,0.1)+0*(theta_seq-mu)/4/mu#
+#Dr_seq <- theta_seq^0.5/max(theta_seq^0.5)*0.5+0.2#
+#
+R0 <- mu*nsp#
+tau_u <- 0.1#
+#
+FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
+R_inter <- FFW$R_seq#
+R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
+plot_Rdistr(R_inter,R_no_inter)
+connectance <- 0.1#
+#
+trimmed_mat <- Trim_web(FFW$link_mat,connectance*nsp^2,"links")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+connectance <- 0.2
+trimmed_mat <- Trim_web(FFW$link_mat,connectance*nsp^2,"links")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+trimmed_mat <- Trim_web(FFW$link_mat,0.5,"quantile")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+trimmed_mat <- Trim_web(FFW$link_mat,0.8,"quantile")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+trimmed_mat <- Trim_web(FFW$link_mat,0.9,"quantile")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+trimmed_mat <- Trim_web(FFW$link_mat,0.95,"MVFF")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+trimmed_mat <- Trim_web(FFW$link_mat,0.9,"MVFF")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+x
+x=rnorm(100)
+quantile(x,0.9)
+source("MERA_SSN.R")#
+source("fullweb_withR.R")#
+source("analyze_fullweb.R")#
+source("Visualization.R")
+trimmed_mat <- Trim_web(FFW$link_mat,0.1,"quantile") ##take upper 10%
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+trimmed_mat <- Trim_web(FFW$link_mat,0.2,"quantile") ##take upper 10%
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+chains <- get_chains(trimmed_mat)
+length(chains)
+trimmed_mat
+get_chains
+chains <- get_chains(trimmed_mat)
+chains
+source("analyze_fullweb.R")#
+source("Visualization.R")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+connectance <- 0.3#
+#
+trimmed_mat <- Trim_web(FFW$link_mat,connectance*nsp^2,"links")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+nsp <- 30#
+mu <- 10#
+theta_seq <- runif(nsp,1,2*mu-1)#
+Dr_seq <- rnorm(nsp,0.5,0.1)+0.3*(theta_seq-mu)/4/mu#
+#Dr_seq <- theta_seq^0.5/max(theta_seq^0.5)*0.5+0.2#
+#
+R0 <- mu*nsp#
+tau_u <- 0.1#
+#
+FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
+nsp <- 30#
+mu <- 10#
+theta_seq <- runif(nsp,1,2*mu-1)#
+Dr_seq <- rnorm(nsp,0.5,0.1)+0.2*(theta_seq-mu)/4/mu#
+#Dr_seq <- theta_seq^0.5/max(theta_seq^0.5)*0.5+0.2#
+#
+R0 <- mu*nsp#
+tau_u <- 0.1#
+#
+FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
+R_inter <- FFW$R_seq#
+R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
+plot_Rdistr(R_inter,R_no_inter)
+connectance <- 0.1#
+#
+trimmed_mat <- Trim_web(FFW$link_mat,connectance*nsp^2,"links")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+trimmed_mat <- Trim_web(FFW$link_mat,0.2,"quantile") ##take upper 10%
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+trimmed_mat <- Trim_web(FFW$link_mat,0.1,"quantile") ##take upper 10%
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+trimmed_mat <- Trim_web(FFW$link_mat,0.001,"MVFF")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+trimmed_mat <- Trim_web(FFW$link_mat,0.005,"MVFF")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+nsp <- 50
+mu <- 10#
+theta_seq <- runif(nsp,1,2*mu-1)#
+Dr_seq <- rnorm(nsp,0.5,0.1)+0.2*(theta_seq-mu)/4/mu#
+#Dr_seq <- theta_seq^0.5/max(theta_seq^0.5)*0.5+0.2#
+#
+R0 <- mu*nsp#
+tau_u <- 0.1#
+#
+FFW <- solve_full_web(theta_seq,Dr_seq,R0,tau_u)
+R_inter <- FFW$R_seq#
+R_no_inter <- solve.analytical(theta_seq,Dr_seq,R0,1)*tau_u*theta_seq#
+plot_Rdistr(R_inter,R_no_inter)
+connectance <- 0.1#
+#
+trimmed_mat <- Trim_web(FFW$link_mat,connectance*nsp^2,"links")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+trimmed_mat <- Trim_web(FFW$link_mat,0.1,"quantile") ##take upper 10%
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+trimmed_mat <- Trim_web(FFW$link_mat,0.005,"MVFF")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+trimmed_mat <- Trim_web(FFW$link_mat,0.001,"MVFF")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+source("analyze_fullweb.R")
+source("Visualization.R")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+chains <- get_chains(trimmed_mat)
+chlen <- Chain_length(chains,loop=T)
+chlen
+connectance <- 0.05
+trimmed_mat <- Trim_web(FFW$link_mat,connectance*nsp^2,"links")
+metrics <- web_summary(trimmed_mat,R_inter,verbose=T)
+trimmed_mat <- Trim_web(FFW$link_mat,0.1,"quantile") ##take upper 10%

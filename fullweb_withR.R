@@ -104,7 +104,7 @@ solve_full_web <- function(theta_seq,Dr_seq,R0,tau_u){
 
 	}
 
-	R_seq <- rowSums(link_mat)
+	R_seq <- rowSums(link_mat)*(1-tau_u)
 
 	#compare with colSums(link_mat)*tau_u
 
