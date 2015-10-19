@@ -5,6 +5,9 @@ FFW <- solve_full_web(theta_seq,Dr_seq,R0)
 ##compare webs with different Dr-theta relationship (random, positive or negative)
 ##plot without the resource!!
 
+##Incorporate basal-or-not by brutal binary selection (whether basal link > sum of other links); might be mechanistically hard to justify
+##The conundrum for Dr distribution is still unsolved.
+
 library(nleqslv)
 Ri2j <- function(C_i,Dr_j,theta_j){
 	D <- 1/(Dr_j-1)
